@@ -98,31 +98,77 @@ function portal(x,y,t){
   }
 }
 
+const INK=col(55,45,70);
+
 function rick(x,y,t){
-  shadow(x,y+20,26,9);
-  const lift=Math.sin(t*1.6)>0.92?-14:0;           // periodic flask raise
-  rr(x,y+6,30,26,10,col(255,255,255));             // lab coat
-  rr(x,y+6,30,26,10,col(235,235,245));
-  rr(x-9,y+2,6,8,2,col(180,190,210));              // pocket
-  rr(x+3,y+2,6,8,2,col(180,190,210));
-  rr(x,y-20,16,16,8,col(255,205,160));             // head
-  poly([[x-8,y-24],[x+8,y-24],[x+6,y-36],[x-2,y-30],[x-6,y-38],[x-10,y-30]],col(120,170,220)); // blue hair
-  circ(x+2,y-18,2.2,col(60,50,70));                // eye
-  rr(x+8,y-30+lift,7,12,3,col(140,220,120));       // flask
-  circ(x+11.5,y-30+lift,4.5,col(190,240,160));
+  const bob=Math.sin(t*1.3)*1.2, lift=Math.sin(t*1.7)>.9?-16:0;
+  shadow(x,y+26,36,13);
+  // shoes
+  rr(x-13,y+20+bob,10,6,3,col(70,70,85));rr(x+4,y+20+bob,10,6,3,col(70,70,85));
+  // lab coat, open front
+  poly([[x-27,y],[x-9,y-30],[x+9,y-30],[x+27,y],[x+19,y+24],[x-19,y+24]],col(244,244,252));
+  poly([[x-31,y+2],[x-27,y],[x-19,y+24],[x-24,y+26]],col(228,228,240));
+  poly([[x+31,y+2],[x+27,y],[x+19,y+24],[x+24,y+26]],col(228,228,240));
+  // green shirt under
+  poly([[x-9,y-28],[x+9,y-28],[x+5,y+20],[x-5,y+20]],col(38,112,78));
+  poly([[x-6,y-28],[x-2,y-20],[x-8,y-20]],col(30,90,64)); // shirt wrinkle
+  // arms
+  rr(x-24,y-8+bob,9,24,5,col(244,244,252));rr(x+16,y-6+bob,9,22,5,col(244,244,252));
+  circ(x-25,y+2+bob,5,col(240,214,186));circ(x+21,y+1+bob,5,col(240,214,186));
+  // flask (periodic raise)
+  rr(x+20,y-5+lift+bob,8,15,4,col(150,225,130));
+  circ(x+24,y-5+lift+bob,5.5,col(185,240,165));
+  // collar
+  rr(x,y-30,17,8,3,col(238,238,248));
+  // head: pale skin
+  circ(x,y-38+bob,14,col(240,214,186));
+  // iconic spiky blue hair
+  poly([[x-16,y-33+bob],[x-19,y-48+bob],[x-12,y-43+bob],[x-7,y-57+bob],[x-1,y-45+bob],[x+6,y-57+bob],[x+12,y-43+bob],[x+19,y-46+bob],[x+15,y-31+bob],[x-16,y-33+bob]],col(96,158,225));
+  poly([[x-15,y-34+bob],[x-18,y-44+bob],[x-11,y-41+bob]],col(120,180,240)); // highlight
+  // squinty eyes
+  X.strokeStyle=INK;X.lineWidth=2;X.lineCap='round';
+  X.beginPath();X.moveTo(x-7,y-38+bob);X.lineTo(x-1.5,y-37+bob);X.stroke();
+  X.beginPath();X.moveTo(x+1.5,y-37+bob);X.lineTo(x+7,y-38+bob);X.stroke();
+  // nose + mouth
+  circ(x+.5,y-32+bob,2.2,col(226,198,168));
+  X.strokeStyle=col(120,90,100);X.lineWidth=1.6;
+  X.beginPath();X.moveTo(x-4,y-26.5+bob);X.quadraticCurveTo(x,y-24.5+bob,x+4,y-26.5+bob);X.stroke();
+  // occasional burp bubble
+  if(Math.sin(t*.9)>.93){circ(x+16,y-64,7,col(255,255,255,.95));circ(x+12,y-60,3,col(255,255,255,.95));}
 }
 
-function beth(x,y){
-  shadow(x,y+19,15,6);
-  rr(x,y+8,22,18,9,col(140,220,190));              // dress
-  rr(x-6,y+6,5,10,2,col(255,200,170));rr(x+1,y+6,5,10,2,col(255,200,170)); // legs
-  circ(x,y-8,12,col(255,205,160));                 // head
-  poly([[x-13,y-12],[x-11,y+2],[x-8,y-8]],col(110,80,50));
-  poly([[x+13,y-12],[x+11,y+2],[x+8,y-8]],col(110,80,50));
-  circ(x,y-12,13,col(130,95,60));                  // long hair back
-  circ(x,y-10,10,col(255,205,160));                // face
-  circ(x-3,y-9,1.8,col(60,50,70));circ(x+3,y-9,1.8,col(60,50,70));
-  circ(x,y-6,2,col(220,120,130));                  // nose
+function beth(x,y,t){
+  const bob=Math.sin(t*1.3)*1.2;
+  shadow(x,y+25,31,12);
+  // shoes + pants
+  rr(x-12,y+21+bob,9,6,3,col(85,70,100));rr(x+3,y+21+bob,9,6,3,col(85,70,100));
+  rr(x-11,y+6+bob,10,16,3,col(75,85,135));rr(x+1,y+6+bob,10,16,3,col(75,85,135));
+  // lab coat over purple shirt
+  poly([[x-25,y],[x-9,y-28],[x+9,y-28],[x+25,y],[x+17,y+20],[x-17,y+20]],col(246,246,252));
+  poly([[x-28,y+2],[x-25,y],[x-17,y+20],[x-21,y+22]],col(230,230,242));
+  poly([[x+28,y+2],[x+25,y],[x+17,y+20],[x+21,y+22]],col(230,230,242));
+  poly([[x-9,y-26],[x+9,y-26],[x+5,y+16],[x-5,y+16]],col(122,72,150));
+  poly([[x-4,y-26],[x,y-19],[x+4,y-26]],col(100,58,125)); // V-neck
+  // arms
+  rr(x-21,y-7+bob,8,20,5,col(246,246,252));rr(x+13,y-7+bob,8,20,5,col(246,246,252));
+  circ(x-22,y+3+bob,5,col(242,212,185));circ(x+17,y+3+bob,5,col(242,212,185));
+  // head: long brown hair behind
+  circ(x,y-33+bob,16.5,col(112,78,54));
+  circ(x-13,y-30+bob,7.5,col(112,78,54));circ(x+13,y-30+bob,7.5,col(112,78,54));
+  poly([[x-17,y-26+bob],[x-15,y-7+bob],[x-9,y-22+bob]],col(112,78,54));
+  poly([[x+17,y-26+bob],[x+15,y-7+bob],[x+9,y-22+bob]],col(112,78,54));
+  circ(x-10,y-29+bob,4,col(135,96,68)); // hair shine
+  // face
+  circ(x,y-34+bob,12.5,col(242,212,185));
+  // eyes + brows
+  circ(x-4.5,y-35.5+bob,1.9,col(50,45,60));circ(x+4.5,y-35.5+bob,1.9,col(50,45,60));
+  X.strokeStyle=col(90,64,44);X.lineWidth=1.4;
+  X.beginPath();X.moveTo(x-7,y-39+bob);X.quadraticCurveTo(x-4.5,y-40.5+bob,x-2,y-39+bob);X.stroke();
+  X.beginPath();X.moveTo(x+2,y-39+bob);X.quadraticCurveTo(x+4.5,y-40.5+bob,x+7,y-39+bob);X.stroke();
+  // nose + mouth
+  circ(x,y-31+bob,1.8,col(228,196,168));
+  X.strokeStyle=col(165,95,115);X.lineWidth=1.6;
+  X.beginPath();X.moveTo(x-3.5,y-27+bob);X.quadraticCurveTo(x,y-25+bob,x+3.5,y-27+bob);X.stroke();
 }
 
 function unicorn(x,y,t,dir){
@@ -203,7 +249,7 @@ function draw(t){
   // tommy lurking at forest edge
   tommy(500,430,t);
   // beth near portal
-  beth(920,650);
+  beth(920,650,t);
   // shards (7 rainbow colors)
   const SH=[[400,200],[1300,180],[1250,880],[280,860],[900,430],[540,520],[1130,620]];
   for(let i=0;i<7;i++)shard(SH[i][0],SH[i][1],RAINBOW[i],t,i);
