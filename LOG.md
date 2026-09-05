@@ -6,7 +6,8 @@
 
 - [x] Обговорено концепцію гри: Бет + Рік у Фрупіленді (S3E9 «The ABC's of Beth»)
 - [x] Перевірено тему конкурсу: «Unicorns and Rainbows»
-- [x] Створено публічний GitHub-репозиторій проекту
+- [x] Створено публічний GitHub-репозиторій проекту: https://github.com/Ded0kL/js13k-2026-froopyland
+- [x] Увімкнено GitHub Pages: https://ded0kl.github.io/js13k-2026-froopyland/
 - [ ] Обрано конкретний геймплей (дует-стелс / бос-бій / ранер)
 - [ ] Створено каркас гри (HTML + canvas + game loop)
 - [ ] Реалізовано персонажа та керування
