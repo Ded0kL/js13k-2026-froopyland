@@ -71,13 +71,18 @@ function rick(){const t=T(),b=Math.sin(t*1.3)*1.2,s=.62;ell(710,625,26,9,col(30,
  X.beginPath();X.moveTo(47,43);X.quadraticCurveTo(50,47,53,43);X.stroke();
  const tk=msg&&msg.w=='RICK'&&T()<msg.u;
  X.lineWidth=tk?1.6+Math.abs(Math.sin(t*9)):1.6;X.beginPath();X.moveTo(45,54);X.quadraticCurveTo(50,tk?54+Math.sin(t*9)*2.5:55,55,54);X.stroke();X.restore()}
-function tommy(){const t=T(),x=Tm.x,y=Tm.y,sw=Math.sin(t*6)*2;
- ell(x,y+34,22,7,col(0,0,0,.2));ell(x,y+8,15,26,'#3c3c3c');
- circ(x,y-18,14,'#484848');circ(x-5+sw,-0+y-22,2.6,'#fff');circ(x+5+sw,y-22,2.6,'#fff');
- circ(x-5+sw,y-22,1.1,'#000');circ(x+5+sw,y-22,1.1,'#000');
- X.strokeStyle='#111';X.lineWidth=2;X.beginPath();X.moveTo(x-7,y-12);X.lineTo(x-2,y-10);X.lineTo(x+2,y-13);X.lineTo(x+7,y-10);X.stroke();
- X.strokeStyle='#3c3c3c';X.lineWidth=6;X.beginPath();X.moveTo(x-13,y);X.lineTo(x-22,y+8+sw);X.moveTo(x+13,y);X.lineTo(x+22,y+8-sw);X.stroke();
- if(Tm.st==2){X.strokeStyle='#000';X.lineWidth=3;X.beginPath();X.arc(x,y-18,22,3.4,6);X.stroke()}}
+function tommy(){const t=T(),x=Tm.x,y=Tm.y,s=.8;ell(x,y+30,22,7,col(0,0,0,.2));
+ X.save();X.translate(x,y-6);X.scale(s,s);X.strokeStyle='#000';X.fillStyle='#000';X.lineWidth=1.6;
+ X.beginPath();X.moveTo(35,23);X.quadraticCurveTo(20,25,25,45);X.quadraticCurveTo(25,60,38,70);X.lineTo(50,85);X.lineTo(62,70);X.quadraticCurveTo(75,60,75,45);X.quadraticCurveTo(80,25,65,23);X.quadraticCurveTo(50,15,35,23);X.stroke();
+ X.beginPath();X.moveTo(37,23);X.lineTo(37,48);X.quadraticCurveTo(37,54,50,54);X.quadraticCurveTo(63,54,63,48);X.lineTo(63,23);X.stroke();
+ X.beginPath();X.moveTo(35,24);X.lineTo(31,14);X.lineTo(39,18);X.lineTo(43,11);X.lineTo(47,18);X.lineTo(54,14);X.lineTo(50,25);X.stroke();
+ X.beginPath();X.arc(44,33,5.5,0,7);X.stroke();X.beginPath();X.arc(56,33,5.5,0,7);X.stroke();
+ X.beginPath();X.arc(44,33,.8,0,7);X.fill();X.beginPath();X.arc(56,33,.8,0,7);X.fill();
+ X.beginPath();X.moveTo(39,41);X.quadraticCurveTo(44,43,49,41);X.moveTo(51,41);X.quadraticCurveTo(56,43,61,41);X.stroke();
+ X.beginPath();X.moveTo(49,36);X.lineTo(49,45);X.quadraticCurveTo(51,47,52,45);X.stroke();
+ const tk=Tm.st==2;
+ X.lineWidth=tk?1.6+Math.abs(Math.sin(t*9)):1.6;X.beginPath();X.moveTo(44,57);X.quadraticCurveTo(50,tk?57+Math.sin(t*9)*2.5:58,56,57);X.stroke();X.restore();
+ if(Tm.st==2){X.fillStyle='#000';X.font='900 30px system-ui';X.textAlign='center';X.fillText('!',x,y-52)}}
 function draw(t){X.fillStyle='#dcdcdc';X.fillRect(0,0,W,H);
  for(let i=0;i<6;i++){X.strokeStyle=RAINBOW[i];X.lineWidth=56-i*9.4;X.lineCap='round';X.beginPath();X.moveTo(800,560);X.lineTo(800,220);X.stroke();X.beginPath();X.moveTo(800,560);X.lineTo(1180,330);X.stroke();X.beginPath();X.moveTo(800,560);X.lineTo(1180,740);X.stroke();X.beginPath();X.moveTo(800,560);X.lineTo(420,740);X.stroke();X.beginPath();X.moveTo(800,560);X.lineTo(420,330);X.stroke()}
  for(let i=0;i<6;i++){X.strokeStyle=RAINBOW[i];X.lineWidth=30-i*4.6;X.beginPath();X.arc(800,560,150,0,7);X.stroke()}
