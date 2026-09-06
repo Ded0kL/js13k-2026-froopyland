@@ -137,38 +137,15 @@ function rick(x,y,t){
   if(Math.sin(t*.9)>.93){circ(x+16,y-64,7,col(255,255,255,.95));circ(x+12,y-60,3,col(255,255,255,.95));}
 }
 
-function beth(x,y,t){
-  const bob=Math.sin(t*1.3)*1.2;
+const BIMG=new Image();BIMG.src='icons8-beth-smith.svg';
+function beth(x,y,t,talk=0){
+  const bob=Math.sin(t*1.3)*1.2,s=1.55;
   shadow(x,y+25,31,12);
-  // shoes + pants
-  rr(x-12,y+21+bob,9,6,3,col(85,70,100));rr(x+3,y+21+bob,9,6,3,col(85,70,100));
-  rr(x-11,y+6+bob,10,16,3,col(75,85,135));rr(x+1,y+6+bob,10,16,3,col(75,85,135));
-  // lab coat over purple shirt
-  poly([[x-25,y],[x-9,y-28],[x+9,y-28],[x+25,y],[x+17,y+20],[x-17,y+20]],col(246,246,252));
-  poly([[x-28,y+2],[x-25,y],[x-17,y+20],[x-21,y+22]],col(230,230,242));
-  poly([[x+28,y+2],[x+25,y],[x+17,y+20],[x+21,y+22]],col(230,230,242));
-  poly([[x-9,y-26],[x+9,y-26],[x+5,y+16],[x-5,y+16]],col(122,72,150));
-  poly([[x-4,y-26],[x,y-19],[x+4,y-26]],col(100,58,125)); // V-neck
-  // arms
-  rr(x-21,y-7+bob,8,20,5,col(246,246,252));rr(x+13,y-7+bob,8,20,5,col(246,246,252));
-  circ(x-22,y+3+bob,5,col(242,212,185));circ(x+17,y+3+bob,5,col(242,212,185));
-  // head: long brown hair behind
-  circ(x,y-33+bob,16.5,col(112,78,54));
-  circ(x-13,y-30+bob,7.5,col(112,78,54));circ(x+13,y-30+bob,7.5,col(112,78,54));
-  poly([[x-17,y-26+bob],[x-15,y-7+bob],[x-9,y-22+bob]],col(112,78,54));
-  poly([[x+17,y-26+bob],[x+15,y-7+bob],[x+9,y-22+bob]],col(112,78,54));
-  circ(x-10,y-29+bob,4,col(135,96,68)); // hair shine
-  // face
-  circ(x,y-34+bob,12.5,col(242,212,185));
-  // eyes + brows
-  circ(x-4.5,y-35.5+bob,1.9,col(50,45,60));circ(x+4.5,y-35.5+bob,1.9,col(50,45,60));
-  X.strokeStyle=col(90,64,44);X.lineWidth=1.4;
-  X.beginPath();X.moveTo(x-7,y-39+bob);X.quadraticCurveTo(x-4.5,y-40.5+bob,x-2,y-39+bob);X.stroke();
-  X.beginPath();X.moveTo(x+2,y-39+bob);X.quadraticCurveTo(x+4.5,y-40.5+bob,x+7,y-39+bob);X.stroke();
-  // nose + mouth
-  circ(x,y-31+bob,1.8,col(228,196,168));
-  X.strokeStyle=col(165,95,115);X.lineWidth=1.6;
-  X.beginPath();X.moveTo(x-3.5,y-27+bob);X.quadraticCurveTo(x,y-25+bob,x+3.5,y-27+bob);X.stroke();
+  if(BIMG.naturalWidth)X.drawImage(BIMG,x-24*s,y+27-48*s+bob,48*s,48*s);
+  // mouth (drawn on canvas: talk=1 — Бет говорить)
+  const mx=x-3.9,my=y+4.1+bob,o=2.3*talk*Math.abs(Math.sin(t*9));
+  X.strokeStyle=col(20,15,25);X.lineWidth=2.4;X.lineCap='round';
+  X.beginPath();X.moveTo(mx-5.4,my);X.quadraticCurveTo(mx,my+2.3+o,mx+5.4,my);X.stroke();
 }
 
 function unicorn(x,y,t,dir){
@@ -248,8 +225,8 @@ function draw(t){
   unicorn(1160,690,t,1);unicorn(1320,230,t,-1);
   // tommy lurking at forest edge
   tommy(500,430,t);
-  // beth near portal
-  beth(920,650,t);
+  // beth near portal (talk=1 — репліка активна)
+  beth(920,650,t,1);
   // shards (7 rainbow colors)
   const SH=[[400,200],[1300,180],[1250,880],[280,860],[900,430],[540,520],[1130,620]];
   for(let i=0;i<7;i++)shard(SH[i][0],SH[i][1],RAINBOW[i],t,i);
