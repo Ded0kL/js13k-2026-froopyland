@@ -52,13 +52,25 @@ function update(t,dt){
   else if(Tm.st==1){if(go(Tm.tx,Tm.ty,1.9)){Tm.wa=t+1.1;Tm.st=0}}
   else{if(go(WP[Tm.wp][0],WP[Tm.wp][1],1.15))Tm.wp=(Tm.wp+1)%5}}
  if(td<120&&t>growlCd&&Tm.st!=2){growl();growlCd=t+1.7}}
-const BIMG=new Image();BIMG.src='icons8-beth-smith.svg';
-function rick(){const t=T(),b=Math.sin(t*1.3)*1.2;ell(710,625,26,9,col(30,20,40,.18));
- poly([[686,620],[700,592],[720,592],[734,620],[726,624],[694,624]],'#f2f2f2');
- circ(710,585+b,13,'#dedede');poly([[696,578+b],[700,566+b],[705,576+b],[710,564+b],[715,576+b],[720,566+b],[724,578+b]],'#9a9a9a');
- circ(706,586+b,1.6,'#222');circ(714,586+b,1.6,'#222');
- X.strokeStyle='#222';X.lineWidth=1.4;X.beginPath();X.moveTo(703,582+b);X.lineTo(717,582+b);X.stroke();
- X.strokeStyle='#888';X.lineWidth=3;X.beginPath();X.moveTo(730,608);X.lineTo(742,600);X.stroke()}
+function beth(x,y,t){const bob=Math.sin(t*1.3)*1.2,s=1.6;ell(x,y+25,31,12,col(30,20,40,hid?.08:.18));
+ X.save();X.translate(x,y+27-46*s+bob);X.scale(s,s);X.globalAlpha=hid?.35:1;X.strokeStyle='#000';X.fillStyle='#000';X.lineWidth=1.6;
+ X.beginPath();X.moveTo(25,1);const HB=[20,2,16,4,13,6,11,8,10,11,9,15,8,20,9,25,8,30,7,35,9,40,12,42,16,43,20,42,23,40,25,38,27,40,30,42,34,43,38,42,41,40,43,35,42,30,41,25,42,20,41,15,40,11,39,8,37,6,34,4,30,2];for(let i=0;i<HB.length;i+=2)X.lineTo(HB[i],HB[i+1]);X.closePath();X.stroke();
+ X.beginPath();X.moveTo(15,14);X.lineTo(15,30);X.quadraticCurveTo(15,38,24,38);X.quadraticCurveTo(33,38,33,30);X.lineTo(33,14);X.stroke();
+ X.beginPath();X.arc(19,21,2.5,0,7);X.stroke();X.beginPath();X.arc(28,21,2.5,0,7);X.stroke();
+ X.beginPath();X.arc(19,21,.6,0,7);X.fill();X.beginPath();X.arc(28,21,.6,0,7);X.fill();
+ X.beginPath();X.moveTo(21,38);X.lineTo(21,43);X.moveTo(27,38);X.lineTo(27,43);X.moveTo(14,46);X.lineTo(21,43);X.lineTo(24,46);X.lineTo(27,43);X.lineTo(34,46);X.stroke();
+ const tk=msg&&msg.w=='BETH'&&T()<msg.u;
+ X.lineWidth=tk?1.6+Math.abs(Math.sin(t*9))*.8:1.6;X.beginPath();X.moveTo(21,31);X.quadraticCurveTo(24,tk?31+Math.sin(t*9)*1.5:32,27,31);X.stroke();X.restore()}
+function rick(){const t=T(),b=Math.sin(t*1.3)*1.2,s=.62;ell(710,625,26,9,col(30,20,40,.18));
+ X.save();X.translate(710,560+b);X.scale(s,s);X.strokeStyle='#000';X.fillStyle='#000';X.lineWidth=1.6;
+ X.beginPath();X.moveTo(50,5);const HA=[58,22,77,16,68,33,87,40,70,51,81,67,62,65,61,84,48,70,35,84,34,65,15,67,26,51,9,40,28,33,19,16,38,22];for(let i=0;i<HA.length;i+=2)X.lineTo(HA[i],HA[i+1]);X.closePath();X.stroke();
+ X.beginPath();X.moveTo(38,35);X.lineTo(38,60);X.quadraticCurveTo(38,72,50,72);X.quadraticCurveTo(62,72,62,60);X.lineTo(62,35);X.stroke();
+ X.lineWidth=2;X.beginPath();X.moveTo(36,28);X.quadraticCurveTo(50,24,64,28);X.stroke();
+ X.lineWidth=1.6;X.beginPath();X.arc(43,38,6,0,7);X.stroke();X.beginPath();X.arc(57,38,6,0,7);X.stroke();
+ X.beginPath();X.arc(43,38,1,0,7);X.fill();X.beginPath();X.arc(57,38,1,0,7);X.fill();
+ X.beginPath();X.moveTo(47,43);X.quadraticCurveTo(50,47,53,43);X.stroke();
+ const tk=msg&&msg.w=='RICK'&&T()<msg.u;
+ X.lineWidth=tk?1.6+Math.abs(Math.sin(t*9)):1.6;X.beginPath();X.moveTo(45,54);X.quadraticCurveTo(50,tk?54+Math.sin(t*9)*2.5:55,55,54);X.stroke();X.restore()}
 function tommy(){const t=T(),x=Tm.x,y=Tm.y,sw=Math.sin(t*6)*2;
  ell(x,y+34,22,7,col(0,0,0,.2));ell(x,y+8,15,26,'#3c3c3c');
  circ(x,y-18,14,'#484848');circ(x-5+sw,-0+y-22,2.6,'#fff');circ(x+5+sw,y-22,2.6,'#fff');
@@ -78,12 +90,7 @@ function draw(t){X.fillStyle='#dcdcdc';X.fillRect(0,0,W,H);
  X.strokeStyle=RAINBOW[2];X.lineWidth=5;X.beginPath();X.arc(800,560,74,-Math.PI/2,-Math.PI/2+got/7*6.28);X.stroke();
  rick();tommy();
  if(carry>=0&&!win){X.save();X.translate(B.x,B.y-78);X.rotate(t*2);poly([[-7,0],[0,-8],[7,0],[0,8]],RAINBOW[carry]);X.restore()}
- {const bob=Math.sin(t*1.3)*1.2,s=1.55;ell(B.x,B.y+25,31,12,col(30,20,40,hid?.08:.18));
-  if(hid){X.globalAlpha=.35}
-  if(BIMG.naturalWidth)X.drawImage(BIMG,B.x-24*s,B.y+27-48*s+bob,48*s,48*s);
-  const talking=msg&&msg.w=='BETH'&&T()<msg.u,o=2.3*(talking?1:0)*Math.abs(Math.sin(t*9));
-  X.strokeStyle=col(20,15,25);X.lineWidth=2.4;X.lineCap='round';
-  X.beginPath();X.moveTo(B.x-9.3,B.y+4.1+bob);X.quadraticCurveTo(B.x,B.y+6.4+bob+o,B.x+9.3,B.y+4.1+bob);X.stroke();X.globalAlpha=1}
+ beth(B.x,B.y,t)
  if(bait){circ(bait.x,bait.y,6,'#fff');circ(bait.x,bait.y,6,RAINBOW[1]);}
  for(let i=0;i<7;i++)if(!SH[i].g){X.save();X.translate(SH[i].x,SH[i].y);X.rotate(Math.sin(t*1.5+i)*.4);poly([[-8,0],[0,-9],[8,0],[0,9]],RAINBOW[i]);X.restore();circ(SH[i].x-2.5,SH[i].y-3,2.5,col(255,255,255,.9))}
  X.textAlign='left';X.textBaseline='middle';X.font='700 24px system-ui';
