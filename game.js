@@ -29,7 +29,7 @@ CV.onpointermove=e=>{if(!e.buttons||story<5||win)return;const r=CV.getBoundingCl
 function caught(t){if(got>0){BAT.push({x:B.x,f:B.f,g:0});got--}B.x=120;B.f=0;B.y=floorY(0);B.q=[];hurt();say('RICK',"They got you?! Walk it off. WALK IT OFF.");for(const o of U)o.stun=t+3}
 function update(t,dt){if(story<5||win)return;
  const vx=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),vy=(K.arrowdown||K.s?1:0)-(K.arrowup||K.w?1:0);
- if(vx||vy){B.q=[];B.x=Math.max(30,Math.min(W-30,B.x+vx*3*dt*60));if(vy&&Math.abs(B.x-nl(B.x))<26)B.y=Math.max(floorY(4),Math.min(floorY(0),B.y+vy*2.6*dt*60))}
+ if(vx||vy){B.q=[];B.x=Math.max(30,Math.min(W-30,B.x+vx*3*dt*60));if(vy&&Math.abs(B.x-nl(B.x))<20)B.y=Math.max(floorY(4),Math.min(floorY(0),B.y+vy*2.6*dt*60));else B.y+=(floorY(B.f)-B.y)*Math.min(1,8*dt)}
  else if(B.q[0]){const p=B.q[0],dx=p[0]-B.x,dy=p[1]-B.y;if(Math.abs(dx)<8&&Math.abs(dy)<8)B.q.shift();else{B.x+=Math.sign(dx)*Math.min(3*dt*60,Math.abs(dx));B.y+=Math.sign(dy)*Math.min(2.6*dt*60,Math.abs(dy))}}
  B.f=Math.max(0,Math.min(4,Math.round((780-B.y)/160)));
  if(vx||vy||B.q[0]&&t>stepT){stepT=t+.22;step()}
@@ -46,7 +46,7 @@ function update(t,dt){if(story<5||win)return;
  if(chase&&!chSaid){chSaid=1;say('BETH',"They're chasing me!")}
  if(!chase)chSaid=0}
 function beth(x,gy,s,tk,t){const b=Math.sin(t*1.3)*1.2;X.fillStyle='rgba(0,0,0,.18)';X.beginPath();X.ellipse(x,gy+4,26*s,9*s,0,0,7);X.fill();
- X.save();X.translate(x,gy-46*s+b);X.scale(s,s);X.strokeStyle=X.fillStyle='#000';X.lineWidth=1.6;
+ X.save();X.translate(x-25*s,gy-46*s+b);X.scale(s,s);X.strokeStyle=X.fillStyle='#000';X.lineWidth=1.6;
  X.beginPath();X.moveTo(25,1);const HB=[20,2,16,4,13,6,11,8,10,11,9,15,8,20,9,25,8,30,7,35,9,40,12,42,16,43,20,42,23,40,25,38,27,40,30,42,34,43,38,42,41,40,43,35,42,30,41,25,42,20,41,15,40,11,39,8,37,6,34,4,30,2];for(let i=0;i<HB.length;i+=2)X.lineTo(HB[i],HB[i+1]);X.closePath();X.stroke();
  X.beginPath();X.moveTo(15,14);X.lineTo(15,30);X.quadraticCurveTo(15,38,24,38);X.quadraticCurveTo(33,38,33,30);X.lineTo(33,14);X.stroke();
  X.beginPath();X.arc(19,21,2.5,0,7);X.stroke();X.beginPath();X.arc(28,21,2.5,0,7);X.stroke();
@@ -54,7 +54,7 @@ function beth(x,gy,s,tk,t){const b=Math.sin(t*1.3)*1.2;X.fillStyle='rgba(0,0,0,.
  X.beginPath();X.moveTo(21,38);X.lineTo(21,43);X.moveTo(27,38);X.lineTo(27,43);X.moveTo(14,46);X.lineTo(21,43);X.lineTo(24,46);X.lineTo(27,43);X.lineTo(34,46);X.stroke();
  X.lineWidth=tk?1.6+Math.abs(Math.sin(t*9))*.8:1.6;X.beginPath();X.moveTo(21,31);X.quadraticCurveTo(24,tk?31+Math.sin(t*9)*1.5:32,27,31);X.stroke();X.restore()}
 function rick(x,gy,s,tk,t){const b=Math.sin(t*1.3)*1.2;X.fillStyle='rgba(0,0,0,.18)';X.beginPath();X.ellipse(x,gy+4,24*s,8*s,0,0,7);X.fill();
- X.save();X.translate(x,gy-84*s+b);X.scale(s,s);X.strokeStyle=X.fillStyle='#000';X.lineWidth=1.6;
+ X.save();X.translate(x-50*s,gy-84*s+b);X.scale(s,s);X.strokeStyle=X.fillStyle='#000';X.lineWidth=1.6;
  X.beginPath();X.moveTo(50,5);const HA=[58,22,77,16,68,33,87,40,70,51,81,67,62,65,61,84,48,70,35,84,34,65,15,67,26,51,9,40,28,33,19,16,38,22];for(let i=0;i<HA.length;i+=2)X.lineTo(HA[i],HA[i+1]);X.closePath();X.stroke();
  X.beginPath();X.moveTo(38,35);X.lineTo(38,60);X.quadraticCurveTo(38,72,50,72);X.quadraticCurveTo(62,72,62,60);X.lineTo(62,35);X.stroke();
  X.lineWidth=2;X.beginPath();X.moveTo(36,28);X.quadraticCurveTo(50,24,64,28);X.stroke();
@@ -63,7 +63,7 @@ function rick(x,gy,s,tk,t){const b=Math.sin(t*1.3)*1.2;X.fillStyle='rgba(0,0,0,.
  X.beginPath();X.moveTo(47,43);X.quadraticCurveTo(50,47,53,43);X.stroke();
  X.lineWidth=tk?1.6+Math.abs(Math.sin(t*9)):1.6;X.beginPath();X.moveTo(45,54);X.quadraticCurveTo(50,tk?54+Math.sin(t*9)*2.5:55,55,54);X.stroke();X.restore()}
 function uni(x,gy,s,tk,t){X.fillStyle='rgba(0,0,0,.2)';X.beginPath();X.ellipse(x,gy+3,26*s,8*s,0,0,7);X.fill();
- X.save();X.translate(x,gy-84*s+Math.sin(t*2+x)*2);X.scale(s,s);X.translate(-50,-56);X.lineWidth=2.5;X.strokeStyle=X.fillStyle='#000';X.lineJoin=X.lineCap='round';
+ X.save();X.translate(x,gy-29*s+Math.sin(t*2+x)*2);X.scale(s,s);X.translate(-50,-56);X.lineWidth=2.5;X.strokeStyle=X.fillStyle='#000';X.lineJoin=X.lineCap='round';
  X.beginPath();X.roundRect(22,28,56,56,18);X.stroke();
  X.beginPath();X.moveTo(26,32);X.quadraticCurveTo(16,16,26,12);X.quadraticCurveTo(34,18,33,29);X.stroke();
  X.beginPath();X.moveTo(27,26);X.quadraticCurveTo(22,18,26,16);X.stroke();
@@ -93,7 +93,7 @@ function draw(t){X.fillStyle='#cfcfcf';X.fillRect(0,0,W,H);
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=3;
  X.beginPath();X.roundRect(20,848,W-40,132,14);X.fill();X.stroke();
  X.beginPath();X.roundRect(34,860,108,108,10);X.stroke();
- if(dlg.w=='RICK')rick(88,962,1.15,1,t);else if(dlg.w=='BETH')beth(88,962,2.2,1,t);else uni(88,962,1.3,1,t);
+ if(dlg.w=='RICK')rick(88,960,1.1,1,t);else if(dlg.w=='BETH')beth(88,958,1.95,1,t);else uni(88,952,1.3,1,t);
  X.fillStyle='#111';X.font='800 22px system-ui';X.textAlign='left';X.fillText(dlg.w,156,886);
  X.font='500 25px system-ui';let ln='',yy=918;for(const wd of dlg.s.split(' ')){if(X.measureText(ln+wd).width>W-240){X.fillText(ln,156,yy);yy+=30;ln=''}ln+=wd+' '}X.fillText(ln,156,yy);
  if(story<5){X.fillStyle='#666';X.font='600 18px system-ui';X.textAlign='right';X.fillText('click / space ▸',W-40,962)}
