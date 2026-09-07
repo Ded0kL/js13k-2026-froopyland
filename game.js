@@ -50,7 +50,7 @@ CV.onpointerdown=e=>{initA();
  if(DQ.length){nxt();return}
  if(win){location.reload();return}
  const[mx,my]=ptr(e);
- if(ph==0){if(mx>780&&mx<1260&&my>200&&my<560){const i=Math.max(0,Math.min(2,Math.floor((my-225)/90))),s=Math.max(0,Math.min(4,Math.floor((mx-830)/70)));clickSeg(s)}return}
+ if(ph==0){if(mx>720&&mx<1200&&my>200&&my<560){const i=Math.max(0,Math.min(2,Math.floor((my-225)/90))),s=Math.max(0,Math.min(4,Math.floor((mx-830)/70)));clickSeg(s)}return}
  if(ph==3){if(mx>900&&mx<1400&&my>140&&my<600){const c=Math.floor((mx-920)/110),r=Math.floor((my-160)/150);if(r>=0&&r<3&&c>=0&&c<4){loFlip(r,c);if(loWon()){win=1;say('RICK',"Wubba lubba dub dub! The clone is ready! We saved a life without making you say 'I'm sorry'. Grab a beer, kiddo — we are amoral geniuses.");burp()}}}return}
  route(mx,my)};
 CV.onpointermove=e=>{if(!e.buttons||DQ.length||win||(ph!=1&&ph!=2))return;const[mx,my]=ptr(e);route(mx,my)};
@@ -128,18 +128,29 @@ function draw(t){X.fillStyle=ph==0||ph==3?'#2a2a2a':'#cfcfcf';X.fillRect(0,0,W,H
  if(ph==1)for(const c of CELLS)if(!c.g){const y=floorY(c.f)-26+Math.sin(t*2+c.x)*3;X.fillStyle='#ffd32a';X.strokeStyle='#000';X.lineWidth=2;
   X.beginPath();X.roundRect(c.x-9,y-16,18,32,3);X.fill();X.stroke();X.strokeRect(c.x-4,y-21,8,5);
   X.fillStyle='#000';X.font='700 16px system-ui';X.textAlign='center';X.fillText('+',c.x,y+7)}
- if(ph==0){X.strokeStyle='#fff';X.lineWidth=3;X.setLineDash([9,7]);X.strokeRect(1180,340,180,240);X.setLineDash([]);
-  X.fillStyle='#fff';X.font='600 15px system-ui';X.textAlign='center';X.fillText('chalk door',1270,325);
-  X.fillStyle='#111';X.strokeStyle='#888';X.lineWidth=4;X.beginPath();X.roundRect(780,200,480,360,12);X.fill();X.stroke();
-  X.fillStyle='#000';X.fillRect(800,220,440,320);
+ if(ph==0||ph==3){X.fillStyle='#1e1e1e';X.fillRect(0,0,W,848);X.strokeStyle='#2a2a2a';X.lineWidth=2;
+  for(let x=80;x<W;x+=160){X.beginPath();X.moveTo(x,0);X.lineTo(x,828);X.stroke()}
+  X.fillStyle='#161616';X.fillRect(0,828,W,20);X.fillStyle='#333';X.fillRect(0,828,W,3);
+  X.fillStyle='#3a3a3a';for(let x=40;x<W;x+=160)for(let y=60;y<780;y+=180){X.beginPath();X.arc(x,y,3,0,7);X.fill()}}
+ if(ph==0){X.strokeStyle='#3f3f3f';X.lineWidth=2;X.strokeRect(60,690,100,100);X.strokeRect(170,730,60,60);
+  X.beginPath();X.moveTo(60,690);X.lineTo(160,790);X.moveTo(160,690);X.lineTo(60,790);X.stroke();
+  X.strokeRect(50,330,130,8);X.fillStyle='#18dcff';X.globalAlpha=.5;X.fillRect(80,290,16,40);X.globalAlpha=1;
+  X.strokeStyle='#3f3f3f';X.beginPath();X.moveTo(640,0);X.lineTo(640,86);X.stroke();X.fillStyle='#ffd32a';X.globalAlpha=.55;X.beginPath();X.arc(640,96,8,0,7);X.fill();X.globalAlpha=.07;X.beginPath();X.arc(640,96,64,0,7);X.fill();X.globalAlpha=1;
+  X.strokeStyle='#fff';X.lineWidth=3;X.setLineDash([9,7]);X.strokeRect(1260,340,180,240);X.setLineDash([]);
+  X.globalAlpha=.25;X.lineWidth=1;for(let y=360;y<570;y+=30){X.beginPath();X.moveTo(1275,y);X.lineTo(1425,y+14);X.stroke()}X.globalAlpha=1;
+  X.fillStyle='#fff';X.beginPath();X.arc(1428,470,5,0,7);X.fill();
+  X.font='600 15px system-ui';X.textAlign='center';X.fillText('chalk door',1350,325);
+  X.strokeStyle=PZS>2?'#2ed573':'#4a4a4a';X.lineWidth=5;X.beginPath();X.moveTo(1200,430);X.quadraticCurveTo(1240,455,1258,468);X.stroke();
+  if(PZS>2){X.globalAlpha=.8;for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=5;X.beginPath();X.arc(1350,460,40+i*8,t*2+i,t*2+i+4.4);X.stroke()}X.globalAlpha=1}
+  X.fillStyle='#111';X.strokeStyle='#888';X.lineWidth=4;X.beginPath();X.roundRect(720,200,480,360,12);X.fill();X.stroke();
+  X.fillStyle='#000';X.fillRect(740,220,440,320);
   for(let i=0;i<3;i++){const py=270+i*90,act=i==PZS;
    for(let s=0;s<5;s++){const px=860+s*70,on=PZ[i][s];
     X.save();X.translate(px,py);X.rotate(on*Math.PI/2);
     X.strokeStyle=on?'#666':RB[(i*2+s)%6];X.lineWidth=act?8:6;X.beginPath();X.moveTo(-28,0);X.lineTo(28,0);X.stroke();X.restore()}
    X.fillStyle=RB[i];X.beginPath();X.arc(812,py,10,0,7);X.fill();
-   X.fillStyle=pipeOK(i)?'#2ed573':'#444';X.beginPath();X.arc(1185,py,8,0,7);X.fill();
    if(act){X.fillStyle='#fff';X.font='700 15px system-ui';X.textAlign='left';X.fillText('▶ CLICK TO ROTATE → 0°',820,py-34)}}
-  X.fillStyle='#777';X.font='600 14px system-ui';X.textAlign='center';X.fillText('QUANTUM PROJECTOR v13.0 — BOOT SECTOR STRIPPED (13KB LIMIT)',1020,580)}
+  X.fillStyle='#777';X.font='600 14px system-ui';X.textAlign='center';X.fillText('QUANTUM PROJECTOR v13.0 — BOOT SECTOR STRIPPED (13KB LIMIT)',960,590)}
  if(ph==3){X.strokeStyle='#888';X.lineWidth=4;X.strokeRect(150,180,180,320);
   X.fillStyle='#18dcff';X.globalAlpha=.25;X.fillRect(150,180,180,320);X.globalAlpha=1;
   X.fillStyle='#888';X.font='600 14px system-ui';X.textAlign='center';X.fillText('CLONE CAPSULE',240,525);
