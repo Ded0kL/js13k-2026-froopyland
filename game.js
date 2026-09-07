@@ -74,7 +74,7 @@ function trAdd(p){const l=TRP[TRP.length-1];if(l&&l[0]==p[0]&&l[1]==p[1])return;
  if(TRP.length)TRP.length=0}
 function initGate(){ph=3;gseq();GSTEP=0;GPL=0;GSHOW=0;GAT=0;GR=1;GERR=0;GOP=0;CELLS.forEach(c=>{c.u=0;c.s=0});B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['TOMMY',"STAY OUT of my Froopyland! The gate eats wrong answers, girl!"],['RICK',"A memory gate — Tommy warded the path! Copy EVERY sequence: FIVE in a row. One mess-up and all five reset!"]])}
 function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;CELLS[i].s=T();
- if(i==GSEQ[GPL]){GPL++;if(GPL==3){GAT=0;ding();if(GR>4){GOP=1;setQ([['TOMMY',"Ugh! FINE! The gate's open. Froopyland itself will deal with you, though!"],['RICK',"Beyond it: the meadow with the memory cells I need! Bring 'em to me ONE at a time. Rainbow ladders go UP. Froupies chase — RUN!"]],initCells)}else{GR++;gseq();GSTEP=0;GPL=0;GSHOW=T()+.6}}}
+ if(i==GSEQ[GPL]){GPL++;if(GPL==3){GAT=0;ding();if(GR>4){GOP=1;setQ([['TOMMY',"Ugh! FINE! The gate's open. Froopyland itself will deal with you, though!"],['RICK',"Beyond it: the meadow with the memory cells I need! Bring 'em to me ONE at a time. Rainbow ladders go UP. Froupies chase — RUN!"]],initCells)}else{GR++;gseq();GSTEP=0;GPL=0;GSHOW=T()+1}}}
  else{GERR=T();GR=1;GPL=0;GSTEP=0;GAT=0;GSHOW=0;CELLS.forEach(c=>c.u=0);hurt()}}
 // L2: Tommy fight
 let TK={x:900,f:2,dead:0,cd:0},KNIVES=[];
@@ -131,7 +131,7 @@ function update(t,dt){if(win||DQ.length)return;
  if(ph==5){LOT-=dt;if(LOT<=0){initL3();say('RICK',"Time's up! The court granted ONE continuance. Move!")}return}
  moveB(t,dt);
  if(ph==2){if(TRP.length==DK.length){TRC+=dt;if(TRC>2.5){TRC=0;TRP=[]}}return}
- if(ph==3){if(GSHOW&&!GAT&&!GOP){if(GSTEP>2&&t-GSHOW>2||t-GSHOW>3){GAT=1;GSHOW=0}else if(GSTEP<3&&t-GT>.55){GT=t;const i=GSEQ[GSTEP];tone(i);CELLS[i].s=T();GSTEP++}}
+ if(ph==3){if(GSHOW&&!GAT&&!GOP){if(GSTEP>2&&t-GSHOW>2||t-GSHOW>3){GAT=1;GSHOW=0}else if(GSTEP<3&&t>GSHOW&&t-GT>.55){GT=t;const i=GSEQ[GSTEP];tone(i);CELLS[i].s=T();GSTEP++}}
   else if(!GAT&&!GOP&&t-GERR>1){gseq();GSTEP=0;GPL=0;GSHOW=T()}
   return}
  if(ph==4){if(!TK.dead){
