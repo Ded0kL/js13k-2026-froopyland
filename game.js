@@ -16,9 +16,9 @@ let ph=0,got=0,win=0,stepT=0,LOT=0,PZS=0,FNG=0,FLS=0,CR={on:0,x:0,y:0,f:0,p:0};
 let MENU=1;const startGame=()=>{initA();MENU=0;initL0()};const menuBtn=()=>{const bw=Math.min(340,cw*.62),bh=Math.max(56,Math.min(74,chh*.08));return[cw/2-bw/2,chh*.44-bh/2,bw,bh]};
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
-let DQ=[],ST=0,after=0;
-const setQ=(qs,cb)=>{DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
-const nxt=()=>{ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;if(after){const f=after;after=0;f()}}};
+let DQ=[],ST=0,after=0,DLT=0;
+const setQ=(qs,cb)=>{DLT=T();DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
+const nxt=()=>{DLT=T();ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;if(after){const f=after;after=0;f()}}};
 const BMSG="Click the rainbow cables to rotate them to 0°! Link the power supply to the chalk door! Hurry!",EMSG="Get the finger to the TOP PORTAL before the 13KB buffer overflows! RUN!",GMSG="Click a node to flip it AND its neighbours! Tip: clear each row by clicking the row BELOW it!";
 const CS1=[['BETH',"Dad, the news says they're executing Tommy's father today for his murder! We have to go back to Froopyland and stop it!"],['RICK',"*Burp*... Alright Beth. I drew the chalk door on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
 const CS2=[['RICK',"W-welcome to Froopyland, sweetie! *burp* Built every leaf of it when you were nine! Child-proofed to hell — NOTHING here can go wrong!"],['BETH',"You built me a murder jungle, Dad."],['RICK',"A SAFE murder jungle! Relax and — hold on. Is that pony wearing WINGS? I did not install wings."]];
@@ -52,7 +52,7 @@ function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=4)return;NG.t+=dt;
  for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&Math.abs(b.x-e.x)<30&&Math.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
  NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
  if(NG.s==4){NG.mx+=420*dt;NG.my-=240*dt;if(NG.t>2.2){NG.s=3;NG.t=0}return}
- if(NG.k>=20){NG.s=5;FLS=t;ding();setQ(CSW,initCells)}}
+ if(NG.k>=20){NG.s=5;FLS=t;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initCells)}}
 function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
  if(NG.s==1||NG.s==2||NG.s==4)wuni(NG.mx,NG.my,1.9,t);
  if(NG.s==3)for(const e of NG.en)wuni(e.x,e.y,.62,t+e.x*.01);
@@ -92,14 +92,15 @@ function route(px,py){const tf=Math.max(0,Math.min(4,Math.round((780-py)/160)));
 const K={};
 onkeydown=e=>{initA();const k=e.key.toLowerCase();K[k]=1;if(k.includes('arrow')||k==' ')e.preventDefault();
  if(MENU){if(k=='enter'||k==' '||k=='e')startGame();return}
- if(DQ.length){if(k=='enter'||k==' '||k=='e')nxt();return}
+ if(DQ.length){if((k=='enter'||k==' '||k=='e')&&T()-DLT>.4)nxt();return}
  if(win&&k=='enter')location.reload()};
 onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
 let J=0;
 CV.onpointerdown=e=>{initA();
  if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();return}
- if(DQ.length){nxt();return}
+ const r0=CV.getBoundingClientRect(),sy=e.clientY-r0.top;
+ if(DQ.length){if(sy>chh-PNH&&T()-DLT>.4)nxt();return}
  if(win){location.reload();return}
  const[mx,my]=ptr(e);TR=0;
  if(ph==6){if(NG.s==3){const dx=mx-800,dy=my-185,d=Math.hypot(dx,dy)||1;NG.sh.push({x:800,y:185,dx:dx/d*10,dy:dy/d*10,c:NG.k});snd(760,.06,'square',.07,-260)}return}  if(ph==0){if(mx>620&&mx<1200&&my>200&&my<560){const i=Math.max(0,Math.min(3,Math.floor((my-225)/90))),s=Math.max(0,Math.min(6,Math.floor((mx-760)/60)));clickSeg(s)}return}
@@ -214,7 +215,7 @@ function bgDecor(t){const d=ph==4;
   X.fillStyle='rgba(255,255,255,.35)';X.beginPath();X.arc(tx-8,ty-72,8,0,7);X.fill()}}
 function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==6?(m?700:960):ph==0?(m?920:1600):ph==5?(m?1220:1600):m?900:1600;
  SS=Math.min(cw/dvw,(chh-PNH)*W/(dvw*GH));
- const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:ph==6?800:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:ph==6?(NG.s>1&&NG.s<4?330:540):B.y-60;
+ const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:ph==6?800:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:ph==6?(NG.s==1?(NG.t<1.1?540:Math.max(330,Math.min(540,NG.my))):NG.s>0&&NG.s<5?330:540):B.y-60;
  const vw=cw/SS,vh=(chh-PNH)/SS,cx=Math.max(vw/2,Math.min(W-vw/2,fx)),cy=vh>=GH?GH/2:Math.max(vh/2,Math.min(GH-vh/2,fy));
  OX=cw/2-cx*SS;OY=(chh-PNH)/2-cy*SS}
 function drawMenu(t){const gy=chh*.8,s=Math.min(1.1,Math.max(.55,Math.min(cw/1150,chh/900)));
