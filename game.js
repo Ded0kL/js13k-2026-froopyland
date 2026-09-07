@@ -63,7 +63,7 @@ function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
  X.strokeStyle='#7a4a20';X.lineWidth=6;X.beginPath();X.moveTo(726,252);X.quadraticCurveTo(800,278,874,252);X.stroke();
  for(const b of NG.sh){X.strokeStyle=RB[b.c%6];X.lineWidth=5;X.beginPath();X.moveTo(b.x,b.y);X.lineTo(b.x-b.dx*3,b.y-b.dy*3);X.stroke()}}
 // ph2: trace the chalk counter-door; ph3: memory gate (Simon); ph4: Tommy fight
-let DK=[];const genDK=()=>{DK=[];for(let k=0;k<30;k++){const r=M.floor(k/3),c=k%3,cc=r%2?2-c:c;DK.push([[1280,1360,1448][cc]+(M.random()*16-8),592-r*46+(M.random()*10-5)])}},GDX=[140,260,380];
+let DK=[];const genDK=()=>{DK=[];const cols=cw>chh?4:3,rows=9,x0=cw*.1,x1=cw*.9,y0=(chh-PNH)*.16,y1=(chh-PNH)*.88;for(let k=0;k<cols*rows;k++){const r=M.floor(k/cols),c=k%cols,cc=r%2?cols-1-c:c;DK.push([x0+(x1-x0)*cc/(cols-1)+(M.random()*14-7),y0+(y1-y0)*r/(rows-1)+(M.random()*10-5)])}},GDX=[140,260,380];
 let TRP=[],GSEQ=[],GSTEP=0,GPL=0,GSHOW=0,GAT=0,GR=0,GERR=0,GLK=0,GOP=0,GT=0;
 function initTr(){ph=2;TRP=[];genDK();B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['RICK',"Tommy sealed his arena with a "+cd+" lock! Hold and drag along the dots!"],['TOMMY',"You'll never draw it right! You failed drawing AND me, aunt Beth!"]])}
 function trPt(m){let b=0,bd=99;for(const p of DK){const d=M.hypot(m[0]-p[0],m[1]-p[1]);if(d<34&&d<bd){b=p;bd=d}}return b};
@@ -222,20 +222,19 @@ function drawMenu(t){const gy=chh*.7,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900
  X.font='700 12px system-ui';for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);X.fillStyle='#1d2b22';X.strokeStyle='#2ed573';X.lineWidth=2;X.beginPath();X.roundRect(dx,dy,dw,dh,8);X.fill();X.stroke();X.fillStyle='#aaa';X.fillText(DBG[i][0],dx+dw/2,dy+21)}
  X.fillStyle='#333';X.font='700 '+M.round(M.max(11,M.min(15,cw*.026)))+'px system-ui';
  for(let i=0;i<4;i++)X.fillText(names[i],x0+i*sp,gy+26)}
-function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);return}cam();const GA=chh-PNH,tk=DQ.length>0;
+function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);return}if(ph==2){SS=1;OX=0;OY=0}else cam();const GA=chh-PNH,tk=DQ.length>0;
  if(ph==0||ph==5)X.fillStyle='#161616';else{const d=ph==4,g=X.createLinearGradient(0,0,0,GA);g.addColorStop(0,d?'#6a4a5a':'#a5e3ff');g.addColorStop(1,d?'#40303f':'#e6ffd9');X.fillStyle=g}
  X.fillRect(0,0,cw,chh);
  X.setTransform(DPR*SS,0,0,DPR*SS,OX*DPR,OY*DPR);
- if(ph>0&&ph!=5)bgDecor(t);
- if(ph>0){for(const l of LAD)for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=5;X.beginPath();X.moveTo(l+(i-2.5)*5,floorY(4)-4);X.lineTo(l+(i-2.5)*5,floorY(0)+6);X.stroke()}
+ if(ph>0&&ph!=5&&ph!=2)bgDecor(t);
+ if(ph>0&&ph!=2){for(const l of LAD)for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=5;X.beginPath();X.moveTo(l+(i-2.5)*5,floorY(4)-4);X.lineTo(l+(i-2.5)*5,floorY(0)+6);X.stroke()}
   for(let f=0;f<5;f++){X.fillStyle=ph==4?'#57724f':'#43a047';X.fillRect(0,floorY(f),W,14);X.fillStyle=ph==4?'#41563c':'#2e7d32';X.fillRect(0,floorY(f)+14,W,4)}
   const hot=ph==4&&FNG==2;if(ph!=1){X.fillStyle='#555';X.beginPath();X.arc(1330,floorY(4)-60,46,0,7);X.fill();
    if(hot)for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=7;X.beginPath();X.arc(1330,floorY(4)-60,52+i*6,t*2+i,t*2+i+4.4);X.stroke()}
    X.fillStyle=hot?'#fff':'#aaa';X.beginPath();X.arc(1330,floorY(4)-60,30,0,7);X.fill()}}
- if(ph==2||ph==3){X.strokeStyle='#fff';X.lineWidth=3;X.setLineDash([9,7]);X.strokeRect(1248,140,236,512);X.setLineDash([])}
- if(ph==2){X.globalAlpha=.18;X.strokeStyle='#fff';X.lineWidth=2;X.beginPath();X.moveTo(...DK[0]);for(const p of DK)X.lineTo(p[0],p[1]);X.stroke();X.globalAlpha=1;
-  X.font='600 20px system-ui';X.textAlign='center';X.fillStyle='#ddd';X.fillText('chalk lock — trace the dots',1355,135);
-  X.fillStyle='#fff';for(const p of DK){X.beginPath();X.arc(p[0],p[1],5,0,7);X.fill()}
+ if(ph==3){X.strokeStyle='#fff';X.lineWidth=3;X.setLineDash([9,7]);X.strokeRect(1255,150,200,220);X.setLineDash([])}
+ if(ph==2){X.globalAlpha=.12;X.strokeStyle='#000';X.lineWidth=2;X.beginPath();X.moveTo(...DK[0]);for(const p of DK)X.lineTo(p[0],p[1]);X.stroke();X.globalAlpha=1;
+  X.fillStyle='#111';for(const p of DK){X.beginPath();X.arc(p[0],p[1],6,0,7);X.fill()}
   X.lineCap='round';for(let i=0;i<TRP.length;i++){X.strokeStyle=RB[i%6];X.lineWidth=7;X.beginPath();X.moveTo(...TRP[i?i-1:i]);X.lineTo(...TRP[i]);X.stroke()}}
  if(ph==3){X.font='600 20px system-ui';X.textAlign='center';X.fillStyle='#ddd';X.fillText('memory gate — repeat the order',1085,110);
   for(let i=0;i<3;i++){const gx=GDX[i]+800,gy=floorY(2)-70,fl=GAT&&GSTEP<3&&CELLS[i].s&&T()-CELLS[i].s<.35;
@@ -298,7 +297,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
   if(!TK.dead&&TK.f==B.f&&M.abs(TK.x-B.x)<400){X.fillStyle='#000';X.font='900 32px system-ui';X.textAlign='center';X.fillText('!',TK.x,gy-84)}
   if(TK.dead){X.fillStyle='#777';X.font='700 20px system-ui';X.fillText('RIP',TK.x-14,gy-70);
    if(FNG==1){const y=gy-14+M.sin(t*3)*3;X.fillStyle='#fce4d6';X.strokeStyle='#000';X.lineWidth=2;X.beginPath();X.roundRect(TK.x-18,y,36,15,7);X.fill();X.stroke()}}}
- if(ph>0&&ph<5){rick(ph==1?1500:R.x,ph==1?floorY(0):floorY(2),.8,dlg.w=='RICK'&&DQ.length>0,t);if(ph==1)for(const o of U)uni(o.x,o.y,1,t);beth(B.x,B.y,1.6,dlg.w=='BETH',t)}else if(ph==6)nestDraw(t);else{rick(430,830,1.6,dlg.w=='RICK'&&DQ.length>0,t);beth(700,830,1.6,dlg.w=='BETH',t)}
+ if(ph>0&&ph<5){rick(ph==1?1500:ph==2?cw-70:R.x,ph==1?floorY(0):floorY(2),.8,dlg.w=='RICK'&&DQ.length>0,t);if(ph==1)for(const o of U)uni(o.x,o.y,1,t);beth(B.x,B.y,1.6,dlg.w=='BETH',t)}else if(ph==6)nestDraw(t);else{rick(430,830,1.6,dlg.w=='RICK'&&DQ.length>0,t);beth(700,830,1.6,dlg.w=='BETH',t)}
 
  X.setTransform(DPR,0,0,DPR,0,0);
  if(ph==4){X.fillStyle='rgba(255,60,60,'+(.05+.04*M.sin(t*5))+')';X.fillRect(0,0,cw,GA)}
