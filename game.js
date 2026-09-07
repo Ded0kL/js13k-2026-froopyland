@@ -19,9 +19,11 @@ const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0;
 const setQ=(qs,cb)=>{DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
 const nxt=()=>{ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;if(after){const f=after;after=0;f()}}};
-const BMSG="Click the rainbow cables to rotate them to 0°! Link the power supply to the chalk door! Hurry!",FMSG="Grab 3 memory cells, use the rainbow ladders, hack the matrix with your switchblade! Move it!",EMSG="Get the finger to the TOP PORTAL before the 13KB buffer overflows! RUN!",GMSG="Click a node to flip it AND its neighbours! Tip: clear each row by clicking the row BELOW it!";
+const BMSG="Click the rainbow cables to rotate them to 0°! Link the power supply to the chalk door! Hurry!",EMSG="Get the finger to the TOP PORTAL before the 13KB buffer overflows! RUN!",GMSG="Click a node to flip it AND its neighbours! Tip: clear each row by clicking the row BELOW it!";
 const CS1=[['BETH',"Dad, the news says they're executing Tommy's father today for his murder! We have to go back to Froopyland and stop it!"],['RICK',"*Burp*... Alright Beth. I drew the chalk door on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
-const CS2=[['RICK',"We're in! But Tommy-unicorns overrode the matrix. Grab 3 memory cells and hack them with your childhood switchblade!"],['BETH',"The unicorns look... really stabby today."],['RICK',"Froupies LOVE batteries. And memory cells. Don't get trampled!"]];
+const CS2=[['RICK',"W-welcome to Froopyland, sweetie! *burp* Built every leaf of it when you were nine! Child-proofed to hell — NOTHING here can go wrong!"],['BETH',"You built me a murder jungle, Dad."],['RICK',"A SAFE murder jungle! Relax and — hold on. Is that pony wearing WINGS? I did not install wings."]];
+const GRABQ=[['RICK',"LET GO OF ME, YOU OVERGROWN PONY! *burp* It thinks I'm its BABY, Beth!"],['BETH',"Very cute. Taking pictures."],['RICK',"Hatchlings incoming and they think I'm FOOD! TAP anywhere to zap them — three bites and I'm dinner!"]];
+const CSW=[['RICK',"WUBBA LUBBA DUB DUB! Mama-pony saw me zap her hatchlings and made me pack leader! *burp* Nature is EASY."],['BETH',"Kidnapped by a unicorn mom. And you're proud."],['RICK',"Allegedly! Now: three memory cells up top, rainbow ladders go UP, hack them in. Froupies chase — RUN! MOVE IT!"]];
 const CS3=[['BETH',"He wanted me to say sorry?! Screw that! I'd rather slaughter this whole place than apologize!"],['RICK',"Whoa! You literally just murdered him! Total psychopath, just like your old man. Grab his severed finger!"],['RICK',"Get the finger to the top portal! We need his DNA code before his dad gets executed!"]];
 const CS4=[['BETH',"The court execution starts in 30 seconds! Put the finger in the machine and clone him, Dad!"],['RICK',"I'm trying! My gene sequencer is choking on this mutated DNA on a 13KB budget!"]];
 const TS_GATE=["So you brought the cells? Cute. The gate eats wrong answers, girl!","WRONG! The gate remembers EVERYTHING. Watch again, dummy!","This lock is older than Rick's grudges. MATCH. THE. ORDER."],TS_TAUNT=["STABBY STABBY!","Say sorry! SAY IT!","Froopyland-grade knives, Aunt Beth!"],TS_CATCH="You brought a KNIFE?! I'm ELEVEN! ...Ugh, FINE. En garde, aunt Beth!";
@@ -32,7 +34,31 @@ function initL0(){ph=0;PZS=0;PZ=[];for(let i=0;i<3;i++){const p=[0,0,0,0,0];for(
 function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<5)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>2)setQ([['RICK',"Power's linked! The chalk door is open — GO!"]],initL1)}}
 // L1: 3 memory cells
 const CELLS=[[250,0],[1300,2],[800,3]].map(([x,f])=>({x,f,g:0}));
-function initL1(){win=0;ph=1;got=0;B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>say('RICK',FMSG))}
+function initL1(){win=0;ph=6;got=0;NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:floorY(0)};B.x=560;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>{NG.s=1;NG.t=0;neigh()})}
+function initCells(){win=0;ph=1;got=0;B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0})}
+function wuni(x,gy,s,t){const fl=Math.sin(t*9+x);X.save();X.translate(x,gy-58*s);X.scale(s,s);for(const d of[-1,1]){X.save();X.scale(d,1);X.rotate(-.2-fl*.4);X.fillStyle='rgba(255,255,255,.9)';X.strokeStyle='#000';X.lineWidth=2.2;X.lineJoin='round';X.beginPath();X.moveTo(0,0);X.quadraticCurveTo(30,-14,54,-4);X.quadraticCurveTo(38,0,42,8);X.quadraticCurveTo(22,8,12,5);X.quadraticCurveTo(5,5,0,0);X.closePath();X.fill();X.stroke();X.restore()}X.restore();uni(x,gy,s,t)}
+function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3)return;NG.t+=dt;
+ if(NG.s==1){let mx,my;
+  if(NG.t<1.1){mx=1650-950*NG.t/1.1;my=140+590*NG.t/1.1;NG.rx=680;NG.ry=floorY(0)}
+  else if(NG.t<1.35){mx=700;my=730}
+  else{const p=Math.min(1,(NG.t-1.35)/1.55);mx=700+100*p;my=730-490*p;NG.rx=mx;NG.ry=my+62;if(p>=1){NG.s=2;NG.t=0;NG.mx=1120;NG.my=190;NG.rx=800;NG.ry=222;setQ(GRABQ,()=>{NG.s=3;NG.t=0})}}
+  NG.mx=mx;NG.my=my;return}
+ if(NG.t>NG.sp&&NG.en.length<5){NG.t=0;NG.sp=Math.max(.5,1.2-NG.k*.06);NG.en.push({x:Math.random()<.5?-70:1670,y:170+Math.random()*250})}
+ for(const e of NG.en){const dx=800-e.x,dy=182-e.y,d=Math.hypot(dx,dy)||1,v=2+NG.k*.13;e.x+=dx/d*v*dt*60;e.y+=dy/d*v*dt*60;
+  if(d<48){e.g=1;NG.hp--;hurt();if(NG.hp>0)say('RICK',"OW! *burp* They're snacking on me! ZAP THEM!")}}
+ NG.en=NG.en.filter(e=>!e.g);
+ if(NG.hp<=0){NG.hp=3;NG.en=[];NG.sp=1.5;say('RICK',"NOT dying in a horse's nest today! *burp* FIRE, Beth!")}
+ for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&Math.abs(b.x-e.x)<30&&Math.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
+ NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
+ if(NG.k>=10){NG.s=5;FLS=t;NG.mx=1650;NG.my=140;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initCells)}}
+function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
+ if(NG.s>=1)wuni(NG.mx,NG.my,1.9,t);
+ if(NG.s==3)for(const e of NG.en)wuni(e.x,e.y,.62,t+e.x*.01);
+ X.strokeStyle='#7a4a20';X.lineWidth=6;X.beginPath();X.ellipse(800,252,88,26,0,0,7);X.stroke();
+ X.lineWidth=3.5;X.beginPath();X.moveTo(724,250);X.quadraticCurveTo(800,276,876,250);X.moveTo(740,238);X.lineTo(856,262);X.moveTo(748,264);X.lineTo(850,236);X.stroke();
+ rick(NG.rx,NG.ry,.8,DQ.length>0&&dlg.w=='RICK',t);
+ X.strokeStyle='#7a4a20';X.lineWidth=6;X.beginPath();X.moveTo(726,252);X.quadraticCurveTo(800,278,874,252);X.stroke();
+ for(const b of NG.sh){X.strokeStyle=RB[b.c%6];X.lineWidth=5;X.beginPath();X.moveTo(b.x,b.y);X.lineTo(b.x-b.dx*3,b.y-b.dy*3);X.stroke()}}
 // ph2: trace the chalk counter-door; ph3: memory gate (Simon); ph4: Tommy fight
 const DK=[[1280,340],[1280,270],[1292,215],[1325,180],[1368,170],[1408,192],[1425,235],[1425,340]],GDX=[140,260,380];
 let TRP=[],GSEQ=[],GSTEP=0,GPL=0,GSHOW=0,GAT=0,GR=0,GERR=0,GLK=0,GOP=0,GT=0;
@@ -49,6 +75,7 @@ function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;
  else{GERR=T();GR++;GPL=0;GSTEP=0;GAT=0;GSHOW=0;CELLS.forEach(c=>c.u=0);hurt()}}
 // L2: Tommy fight
 let TK={x:900,f:2,dead:0,cd:0},KNIVES=[];
+let NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:780};
 function initL2(){ph=4;FNG=0;TK={x:1450,f:2,dead:0,cd:T()+1.2,wx:1300,wt:0,tc:0};KNIVES=[];B.x=120;B.y=floorY(0);B.f=0;B.q=[];setQ([['TOMMY',TS_CATCH],['RICK',"There he is! Cross the arena — dodge the knives, Beth!"]])}
 function killScene(){TK.dead=1;hurt();KNIVES=[];snd(150,.5,'sawtooth',.3,-100);setQ(CS3,()=>{FNG=1;say('RICK',"Now grab the finger!")})}
 function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];KNIVES=[];TK.x=1450;TK.f=2;TK.cd=t+1.5;TK.wx=1300;TK.wt=0;say('RICK',FNG?"Don't lose the finger! Again!":"You got stabbed?! Walk it off, Beth. WALK IT OFF.")}
@@ -73,6 +100,7 @@ CV.onpointerdown=e=>{initA();
  if(DQ.length){nxt();return}
  if(win){location.reload();return}
  const[mx,my]=ptr(e);TR=0;
+ if(ph==6){if(NG.s==3){const dx=mx-800,dy=my-185,d=Math.hypot(dx,dy)||1;NG.sh.push({x:800,y:185,dx:dx/d*10,dy:dy/d*10,c:NG.k});snd(760,.06,'square',.07,-260)}return}
  if(ph==0){if(mx>720&&mx<1200&&my>200&&my<560){const i=Math.max(0,Math.min(2,Math.floor((my-225)/90))),s=Math.max(0,Math.min(4,Math.floor((mx-830)/70)));clickSeg(s)}return}
  if(ph==2){const p=trPt([mx,my]);if(p){if(TRP.length==DK.length){TRP=[];TRC=0}trAdd(p);TR=1}return}
  if(ph==3){for(let i=0;i<3;i++)if(Math.abs(mx-(GDX[i]+800))<55&&Math.abs(my-(floorY(2)-70))<55){gateClick(i);return}
@@ -96,6 +124,7 @@ function moveB(t,dt){const vx=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),vy=
 let chSaid=0;
 function update(t,dt){if(win||DQ.length)return;
  if(ph==0)return;
+ if(ph==6){nestUpd(t,dt);return}
  if(ph==5){LOT-=dt;if(LOT<=0){initL3();say('RICK',"Time's up! The court granted ONE continuance. Move!")}return}
  moveB(t,dt);
  if(ph==2){if(TRP.length==DK.length){TRC+=dt;if(TRC>2.5){TRC=0;TRP=[]}}return}
@@ -177,9 +206,9 @@ function bgDecor(t){const d=ph==4;
   X.strokeStyle=d?'#4a4a4a':'#a97b50';X.lineWidth=8;X.beginPath();X.moveTo(tx,ty);X.lineTo(tx,ty-52);X.stroke();
   X.fillStyle=d?'#6a6a6a':['#ff8fa3','#ffd32a','#7bdff2'][i];X.beginPath();X.arc(tx,ty-64,24,0,7);X.fill();
   X.fillStyle='rgba(255,255,255,.35)';X.beginPath();X.arc(tx-8,ty-72,8,0,7);X.fill()}}
-function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==0?(m?920:1600):ph==5?(m?1220:1600):m?900:1600;
+function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==6?(m?700:960):ph==0?(m?920:1600):ph==5?(m?1220:1600):m?900:1600;
  SS=Math.min(cw/dvw,(chh-PNH)*W/(dvw*GH));
- const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:B.y-60;
+ const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:ph==6?800:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:ph==6?(NG.s>1&&NG.s<4?330:540):B.y-60;
  const vw=cw/SS,vh=(chh-PNH)/SS,cx=Math.max(vw/2,Math.min(W-vw/2,fx)),cy=vh>=GH?GH/2:Math.max(vh/2,Math.min(GH-vh/2,fy));
  OX=cw/2-cx*SS;OY=(chh-PNH)/2-cy*SS}
 function drawMenu(t){const gy=chh*.8,s=Math.min(1.1,Math.max(.55,Math.min(cw/1150,chh/900)));
@@ -270,14 +299,13 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
   if(!TK.dead&&TK.f==B.f&&Math.abs(TK.x-B.x)<400){X.fillStyle='#000';X.font='900 32px system-ui';X.textAlign='center';X.fillText('!',TK.x,gy-84)}
   if(TK.dead){X.fillStyle='#777';X.font='700 20px system-ui';X.fillText('RIP',TK.x-14,gy-70);
    if(FNG==1){const y=gy-14+Math.sin(t*3)*3;X.fillStyle='#fce4d6';X.strokeStyle='#000';X.lineWidth=2;X.beginPath();X.roundRect(TK.x-18,y,36,15,7);X.fill();X.stroke()}}}
- if(ph>0&&ph<5){rick(R.x,floorY(4),.62,dlg.w=='RICK'&&DQ.length>0,t);if(ph==1)for(const o of U)uni(o.x,o.y,1,t);beth(B.x,B.y,1.6,dlg.w=='BETH',t)}
- else{rick(430,830,1.6,dlg.w=='RICK'&&DQ.length>0,t);beth(700,830,1.6,dlg.w=='BETH',t)}
+ if(ph>0&&ph<5){rick(R.x,floorY(4),.62,dlg.w=='RICK'&&DQ.length>0,t);if(ph==1)for(const o of U)uni(o.x,o.y,1,t);beth(B.x,B.y,1.6,dlg.w=='BETH',t)}else if(ph==6)nestDraw(t);else{rick(430,830,1.6,dlg.w=='RICK'&&DQ.length>0,t);beth(700,830,1.6,dlg.w=='BETH',t)}
 
  X.setTransform(DPR,0,0,DPR,0,0);
  if(ph==4){X.fillStyle='rgba(255,60,60,'+(.05+.04*Math.sin(t*5))+')';X.fillRect(0,0,cw,GA)}
  if(ph==1&&t-FLS<.3){X.fillStyle='rgba(255,255,255,'+((1-(t-FLS)/.3)*.4)+')';X.fillRect(0,0,cw,GA)}
  X.fillStyle=ph==0||ph==5?'#ddd':(ph==5&&LOT<10?'#ff6b6b':'#111');X.font='800 '+Math.round(PNH*.15)+'px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
- X.fillText(ph==0?'CABLES '+PZS+'/3':ph==1?'CELLS '+got+'/3':ph==2?'TRACE THE CHALK DOOR':ph==3?(GOP?'GO! → GATE':'MEMORY GATE'):ph==4?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):'EXECUTION IN '+Math.max(0,LOT).toFixed(1)+'s',16,Math.round(PNH*.19));
+ X.fillText(ph==0?'CABLES '+PZS+'/3':ph==1?'CELLS '+got+'/3':ph==2?'TRACE THE CHALK DOOR':ph==3?(GOP?'GO! → GATE':'MEMORY GATE'):ph==4?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/10':'FROOPYLAND'):'EXECUTION IN '+Math.max(0,LOT).toFixed(1)+'s',16,Math.round(PNH*.19));
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=2;
  X.beginPath();X.roundRect(8,chh-PNH+8,cw-16,PNH-14,14);X.fill();X.stroke();
  const pb=PNH-30,px0=12+pb/2,py0=chh-10;
