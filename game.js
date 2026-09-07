@@ -30,10 +30,11 @@ const TS_GATE=["So you brought the cells? Cute. The gate eats wrong answers, gir
 // L0: 3 pipes × 5 segments; click flips segment s and s+1 of active pipe
 let PZ=[];
 const pipeOK=i=>PZ[i].every(v=>!v);
-function initL0(){ph=0;PZS=0;PZ=[];for(let i=0;i<3;i++){const p=[0,0,0,0,0];for(let k=0;k<6;k++){const s=Math.floor(Math.random()*4);p[s]^=1;p[s+1]^=1}PZ.push(p)}setQ(CS1,()=>say('RICK',BMSG))}
-function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<5)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>2)setQ([['RICK',"Power's linked! The chalk door is open — GO!"]],initL1)}}
+const PTXT=['Froupie in the wires? Just CLICK the segment to flip it AND its neighbour! Get every rainbow to 0°!','One down! Keep going — flip the segment, flip its neighbour, zero the pipe!','Half a projector left! Same trick: segment AND neighbour, both to 0°!','Last pipe! Zero it and the chalk door opens!'],FTXT=['Link the power supply to the chalk door! Click a segment to flip it AND its neighbour — get all 4 pipes to 0°!','More froupies in the wires! Same drill: flip segment + neighbour, zero every pipe!'];
+function initL0(){ph=0;PZS=0;PZ=[];for(let i=0;i<4;i++){const p=[0,0,0,0,0,0,0];for(let k=0;k<9;k++){const s=Math.floor(Math.random()*6);p[s]^=1;p[s+1]^=1}PZ.push(p)}setQ(CS1,()=>say('RICK',PTXT[0]))}
+function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<7)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>3)setQ([['RICK',"Power's linked! The chalk door is open — GO!"]],initL1);else say('RICK',PTXT[PZS])}}
 // L1: 3 memory cells
-const CELLS=[[250,0],[1300,2],[800,3]].map(([x,f])=>({x,f,g:0}));
+const CELLS=[[250,0],[1300,2],[800,3],[400,4],[1150,4]].map(([x,f])=>({x,f,g:0}));
 function initL1(){win=0;ph=6;got=0;NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:floorY(0)};B.x=560;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>{NG.s=1;NG.t=0;neigh()})}
 function initCells(){win=0;ph=1;got=0;B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0})}
 function wuni(x,gy,s,t){const fl=Math.sin(t*9+x);X.save();X.translate(x,gy-58*s);X.scale(s,s);for(const d of[-1,1]){X.save();X.scale(d,1);X.rotate(-.2-fl*.4);X.fillStyle='rgba(255,255,255,.9)';X.strokeStyle='#000';X.lineWidth=2.2;X.lineJoin='round';X.beginPath();X.moveTo(0,0);X.quadraticCurveTo(30,-14,54,-4);X.quadraticCurveTo(38,0,42,8);X.quadraticCurveTo(22,8,12,5);X.quadraticCurveTo(5,5,0,0);X.closePath();X.fill();X.stroke();X.restore()}X.restore();uni(x,gy,s,t)}
@@ -43,16 +44,17 @@ function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3)return;NG.t+=dt;
   else if(NG.t<1.35){mx=700;my=730}
   else{const p=Math.min(1,(NG.t-1.35)/1.55);mx=700+100*p;my=730-490*p;NG.rx=mx;NG.ry=my+62;if(p>=1){NG.s=2;NG.t=0;NG.mx=1120;NG.my=190;NG.rx=800;NG.ry=222;setQ(GRABQ,()=>{NG.s=3;NG.t=0})}}
   NG.mx=mx;NG.my=my;return}
- if(NG.t>NG.sp&&NG.en.length<5){NG.t=0;NG.sp=Math.max(.5,1.2-NG.k*.06);NG.en.push({x:Math.random()<.5?-70:1670,y:170+Math.random()*250})}
+ if(NG.s==3&&NG.k==10&&!NG.x2){NG.x2=1;NG.mx=-160;NG.my=380;NG.en=[];NG.sh=[];NG.t=0;setQ([['RICK',"Wait — *burp* — why is the BIG one flapping back this way?!"],['BETH',"Mama never left, Dad."],['RICK',"SHE WANTS A SECOND COURSE! Same drill, Beth: zap the hatchlings, protect the nest!"]],()=>{NG.s=3;NG.t=0})}
+ if(NG.t>NG.sp&&NG.en.length<5){NG.t=0;NG.sp=Math.max(.5,1.2-NG.k%10*.06);NG.en.push({x:Math.random()<.5?-70:1670,y:170+Math.random()*250})}
  for(const e of NG.en){const dx=800-e.x,dy=182-e.y,d=Math.hypot(dx,dy)||1,v=2+NG.k*.13;e.x+=dx/d*v*dt*60;e.y+=dy/d*v*dt*60;
   if(d<48){e.g=1;NG.hp--;hurt();if(NG.hp>0)say('RICK',"OW! *burp* They're snacking on me! ZAP THEM!")}}
  NG.en=NG.en.filter(e=>!e.g);
  if(NG.hp<=0){NG.hp=3;NG.en=[];NG.sp=1.5;say('RICK',"NOT dying in a horse's nest today! *burp* FIRE, Beth!")}
  for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&Math.abs(b.x-e.x)<30&&Math.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
  NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
- if(NG.k>=10){NG.s=5;FLS=t;NG.mx=1650;NG.my=140;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initCells)}}
+ if(NG.k>=20){NG.s=5;FLS=t;NG.mx=1650;NG.my=140;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initCells)}}
 function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
- if(NG.s>=1)wuni(NG.mx,NG.my,1.9,t);
+ if(NG.s>=1&&!(NG.s==3&&NG.x2&&NG.k<11))wuni(NG.mx,NG.my,1.9,t);
  if(NG.s==3)for(const e of NG.en)wuni(e.x,e.y,.62,t+e.x*.01);
  X.strokeStyle='#7a4a20';X.lineWidth=6;X.beginPath();X.ellipse(800,252,88,26,0,0,7);X.stroke();
  X.lineWidth=3.5;X.beginPath();X.moveTo(724,250);X.quadraticCurveTo(800,276,876,250);X.moveTo(740,238);X.lineTo(856,262);X.moveTo(748,264);X.lineTo(850,236);X.stroke();
@@ -100,8 +102,7 @@ CV.onpointerdown=e=>{initA();
  if(DQ.length){nxt();return}
  if(win){location.reload();return}
  const[mx,my]=ptr(e);TR=0;
- if(ph==6){if(NG.s==3){const dx=mx-800,dy=my-185,d=Math.hypot(dx,dy)||1;NG.sh.push({x:800,y:185,dx:dx/d*10,dy:dy/d*10,c:NG.k});snd(760,.06,'square',.07,-260)}return}
- if(ph==0){if(mx>720&&mx<1200&&my>200&&my<560){const i=Math.max(0,Math.min(2,Math.floor((my-225)/90))),s=Math.max(0,Math.min(4,Math.floor((mx-830)/70)));clickSeg(s)}return}
+ if(ph==6){if(NG.s==3){const dx=mx-800,dy=my-185,d=Math.hypot(dx,dy)||1;NG.sh.push({x:800,y:185,dx:dx/d*10,dy:dy/d*10,c:NG.k});snd(760,.06,'square',.07,-260)}return}  if(ph==0){if(mx>620&&mx<1200&&my>200&&my<560){const i=Math.max(0,Math.min(3,Math.floor((my-225)/90))),s=Math.max(0,Math.min(6,Math.floor((mx-760)/60)));clickSeg(s)}return}
  if(ph==2){const p=trPt([mx,my]);if(p){if(TRP.length==DK.length){TRP=[];TRC=0}trAdd(p);TR=1}return}
  if(ph==3){for(let i=0;i<3;i++)if(Math.abs(mx-(GDX[i]+800))<55&&Math.abs(my-(floorY(2)-70))<55){gateClick(i);return}
   if(e.pointerType=='touch'){J={id:e.pointerId,x:mx,y:my};B.q=[];return}route(mx,my);return}
@@ -145,7 +146,7 @@ function update(t,dt){if(win||DQ.length)return;
   if(FNG==2&&B.f==4&&Math.abs(B.x-1330)<110)initL3();
   return}
  // ph 1
- for(const c of CELLS)if(!c.g&&c.f==B.f&&Math.abs(c.x-B.x)<32){c.g=1;got++;FLS=t;ding();if(got<3)say('BETH',['Got one.','Ew. Sticky.','Two more.'][got-1]);if(got==3)setQ([['RICK',"All three! Now find Tommy — and Beth? Do what you gotta do."]],initTr)}
+ for(const c of CELLS)if(!c.g&&c.f==B.f&&Math.abs(c.x-B.x)<32){c.g=1;got++;FLS=t;ding();if(got<5)say('BETH',['Got one.','Ew. Sticky.','Three more.','Two more.','Last one.'][got-1]);if(got==5)setQ([['RICK',"All five! Now find Tommy — and Beth? Do what you gotta do."]],initTr)}
  let chase=0;
  for(const o of U){if(t<o.st)continue;
   if(o.f==B.f&&Math.abs(B.x-o.x)<32){if(got>0){CELLS.push({x:B.x,f:B.f,g:0});got--}B.x=120;B.f=0;B.y=floorY(0);B.q=[];hurt();say('RICK',"They got you?! Walk it off. WALK IT OFF.");U.forEach(u=>u.st=t+3);return}
@@ -262,16 +263,16 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
   X.globalAlpha=.25;X.lineWidth=1;for(let y=360;y<570;y+=30){X.beginPath();X.moveTo(1275,y);X.lineTo(1425,y+14);X.stroke()}X.globalAlpha=1;
   X.fillStyle='#fff';X.beginPath();X.arc(1428,470,5,0,7);X.fill();
   X.font='600 20px system-ui';X.textAlign='center';X.fillText('chalk door',1350,325);
-  X.strokeStyle=PZS>2?'#2ed573':'#4a4a4a';X.lineWidth=5;X.beginPath();X.moveTo(1200,430);X.quadraticCurveTo(1240,455,1258,468);X.stroke();
-  if(PZS>2){X.globalAlpha=.8;for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=5;X.beginPath();X.arc(1350,460,40+i*8,t*2+i,t*2+i+4.4);X.stroke()}X.globalAlpha=1}
-  X.fillStyle='#111';X.strokeStyle='#888';X.lineWidth=4;X.beginPath();X.roundRect(720,200,480,360,12);X.fill();X.stroke();
-  X.fillStyle='#000';X.fillRect(740,220,440,320);
-  for(let i=0;i<3;i++){const py=270+i*90,act=i==PZS;
-   for(let s=0;s<5;s++){const px=860+s*70,on=PZ[i][s];
+  X.strokeStyle=PZS>3?'#2ed573':'#4a4a4a';X.lineWidth=5;X.beginPath();X.moveTo(1200,430);X.quadraticCurveTo(1240,455,1258,468);X.stroke();
+  if(PZS>3){X.globalAlpha=.8;for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=5;X.beginPath();X.arc(1350,460,40+i*8,t*2+i,t*2+i+4.4);X.stroke()}X.globalAlpha=1}
+  X.fillStyle='#111';X.strokeStyle='#888';X.lineWidth=4;X.beginPath();X.roundRect(620,200,580,360,12);X.fill();X.stroke();
+  X.fillStyle='#000';X.fillRect(640,220,540,320);
+  for(let i=0;i<4;i++){const py=258+i*82,act=i==PZS;
+   for(let s=0;s<7;s++){const px=760+s*60,on=PZ[i][s];
     X.save();X.translate(px,py);X.rotate(on*Math.PI/2);
-    X.strokeStyle=on?'#666':RB[(i*2+s)%6];X.lineWidth=act?8:6;X.beginPath();X.moveTo(-28,0);X.lineTo(28,0);X.stroke();X.restore()}
-   X.fillStyle=RB[i];X.beginPath();X.arc(812,py,10,0,7);X.fill();
-   if(act){X.fillStyle='#fff';X.font='700 17px system-ui';X.textAlign='left';X.fillText('▶ CLICK TO ROTATE → 0°',820,py-34)}}
+    X.strokeStyle=on?'#666':RB[(i*2+s)%6];X.lineWidth=act?8:6;X.beginPath();X.moveTo(-25,0);X.lineTo(25,0);X.stroke();X.restore()}
+   X.fillStyle=RB[i];X.beginPath();X.arc(714,py,10,0,7);X.fill();
+   if(act){X.fillStyle='#fff';X.font='700 17px system-ui';X.textAlign='left';X.fillText('▶ CLICK TO ROTATE → 0°',724,py-32)}}
   X.fillStyle='#777';X.font='600 18px system-ui';X.textAlign='center';X.fillText('QUANTUM PROJECTOR v13.0 — BOOT SECTOR STRIPPED (13KB LIMIT)',960,590)}
  if(ph==5){X.strokeStyle='#4a4a4a';X.lineWidth=4;X.beginPath();X.moveTo(335,300);X.quadraticCurveTo(440,330,540,225);X.stroke();
   X.beginPath();X.moveTo(685,225);X.quadraticCurveTo(790,400,880,575);X.stroke();
@@ -305,7 +306,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
  if(ph==4){X.fillStyle='rgba(255,60,60,'+(.05+.04*Math.sin(t*5))+')';X.fillRect(0,0,cw,GA)}
  if(ph==1&&t-FLS<.3){X.fillStyle='rgba(255,255,255,'+((1-(t-FLS)/.3)*.4)+')';X.fillRect(0,0,cw,GA)}
  X.fillStyle=ph==0||ph==5?'#ddd':(ph==5&&LOT<10?'#ff6b6b':'#111');X.font='800 '+Math.round(PNH*.15)+'px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
- X.fillText(ph==0?'CABLES '+PZS+'/3':ph==1?'CELLS '+got+'/3':ph==2?'TRACE THE CHALK DOOR':ph==3?(GOP?'GO! → GATE':'MEMORY GATE'):ph==4?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/10':'FROOPYLAND'):'EXECUTION IN '+Math.max(0,LOT).toFixed(1)+'s',16,Math.round(PNH*.19));
+ X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5':ph==2?'TRACE THE CHALK DOOR':ph==3?(GOP?'GO! → GATE':'MEMORY GATE'):ph==4?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'EXECUTION IN '+Math.max(0,LOT).toFixed(1)+'s',16,Math.round(PNH*.19));
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=2;
  X.beginPath();X.roundRect(8,chh-PNH+8,cw-16,PNH-14,14);X.fill();X.stroke();
  const pb=PNH-30,px0=12+pb/2,py0=chh-10;
