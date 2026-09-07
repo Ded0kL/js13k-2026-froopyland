@@ -14,7 +14,7 @@ const B={x:150,y:floorY(0),f:0,q:[]},R={x:1450,f:4};
 const U=[];for(let i=0;i<3;i++)U.push({x:500+i*300,f:i+1,y:floorY(i+1),wx:0,wt:0,nc:0,st:0});
 let ph=0,got=0,win=0,stepT=0,LOT=0,PZS=0,FNG=0,FLS=0,CR={on:0,x:0,y:0,f:0,p:0};
 let MENU=1;const startGame=()=>{initA();MENU=0;initL0()};const menuBtn=()=>{const bw=M.min(340,cw*.62),bh=M.max(56,M.min(74,chh*.08));return[cw/2-bw/2,chh*.44-bh/2,bw,bh]};
-const DBG=[['GAR',initL0],['GATE',initGate],['NEST',initL1],['CELLS',initCells],['TRACE',initTr],['TOMMY',initL2],['DNA',initL3]],dbgBtn=i=>[10+i*(cw-20)/DBG.length+3,chh-46,(cw-20)/DBG.length-6,34];
+const DBG=[['GAR',initL0],['NEST',initL1],['GATE',initGate],['CELLS',initCells],['TRACE',initTr],['TOMMY',initL2],['DNA',initL3]],dbgBtn=i=>[10+i*(cw-20)/DBG.length+3,chh-46,(cw-20)/DBG.length-6,34];
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0,DLT=0;
@@ -24,7 +24,7 @@ const M=Math,bq="*burp* ",wu="Wubba lubba dub dub!",fl="flip it AND its neighbou
 const CS1=[['BETH',"Dad! They're executing Tommy's father today! We go back to Froopyland and stop it!"],['RICK',bq+"Alright Beth. I drew the "+cd+" on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
 const CS2=[['RICK',"W-welcome to Froopyland, sweetie! "+bq+"Built every leaf when you were nine! Child-proofed to hell — NOTHING here can go wrong!"],['BETH',"You built me a murder jungle, Dad."],['RICK',"A SAFE murder jungle! Relax and — hold on. Is that pony wearing WINGS? I did not install wings."]];
 const GRABQ=[['RICK',"LET GO OF ME, YOU OVERGROWN PONY! "+bq+"It thinks I'm its BABY, Beth!"],['BETH',"Very cute. Taking pictures."],['RICK',ht+" incoming and they think I'm FOOD! TAP to "+zp+" — three bites and I'm dinner!"]];
-const CSW=[['RICK',wu+" Mama-pony saw me zap her "+ht+" and made me pack leader! "+bq+"Nature is EASY."],['BETH',"Kidnapped by a unicorn mom — and proud."],['RICK',"Allegedly! Now: five memory cells — bring 'em to me ONE at a time. Rainbow ladders go UP. Froupies chase — RUN! MOVE IT!"]];
+const CSW=[['RICK',wu+" Mama-pony saw me zap her "+ht+" and made me pack leader! "+bq+"Nature is EASY."],['BETH',"Kidnapped by a unicorn mom — and proud."],['RICK',"Allegedly! Now let's find Tommy's trail. This way! MOVE IT!"]];
 const CS3=[['BETH',"He wanted me to "+so+"?! Screw that! I'd rather slaughter this whole place than apologize!"],['RICK',"Whoa! You literally just murdered him! Total psychopath, just like your old man. Grab his severed finger!"],['RICK',"Get the finger to the top portal! We need his DNA code before his dad gets executed!"]];
 const CS4=[['BETH',"The court execution starts in 30 seconds! Put the finger in the machine and clone him, Dad!"],['RICK',"I'm trying! The sequencer chokes on this mutated DNA on a 13KB budget!"]];
 const TS_TAUNT=["STABBY STABBY!","Say "+so+"! SAY IT!","Froopyland-grade knives, Aunt Beth!"],TS_CATCH="You brought a KNIFE?! I'm ELEVEN! ...Ugh, FINE. En garde, aunt Beth!";
@@ -33,7 +33,7 @@ let PZ=[];
 const pipeOK=i=>PZ[i].every(v=>!v);
 const PTXT=['Froupie in the wires? CLICK the segment to '+fl+'! Every rainbow to 0°!','One down! '+fl+' — zero the pipe!','Half a projector left! Same trick: '+fl+'!','Last pipe! Zero it and the '+cd+' opens!'];
 function initL0(){ph=0;PZS=0;PZ=[];for(let i=0;i<4;i++){const p=[0,0,0,0,0,0,0];for(let k=0;k<9;k++){const s=M.floor(M.random()*6);p[s]^=1;p[s+1]^=1}PZ.push(p)}setQ(CS1,()=>say('RICK',PTXT[0]))}
-function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<7)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>3)setQ([['RICK',"Power's linked! The "+cd+" is open — but Tommy left a GATE on it. GO!"]],initGate);else say('RICK',PTXT[PZS])}}
+function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<7)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>3)setQ([['RICK',"Power's linked! The "+cd+" is open — GO!"]],initL1);else say('RICK',PTXT[PZS])}}
 // L1: 3 memory cells
 const CELLS=[[250,0],[1300,2],[800,3],[400,4],[1150,4]].map(([x,f])=>({x,f,g:0}));
 function initL1(){win=0;ph=6;got=0;NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:floorY(0)};B.x=560;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>{NG.s=1;NG.t=0;neigh()})}
@@ -53,7 +53,7 @@ function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=4)return;NG.t+=dt;
  if(NG.hp<=0){NG.hp=3;NG.en=[];NG.sp=1.5;say('RICK',"NOT dying in a horse's nest today! "+bq+"FIRE, Beth!")}
  for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&M.abs(b.x-e.x)<30&&M.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
  NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
- if(NG.k>=20){NG.s=5;FLS=t;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initCells)}}
+ if(NG.k>=20){NG.s=5;FLS=t;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initGate)}}
 function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
  if(NG.s==1||NG.s==2||NG.s==4)wuni(NG.mx,NG.my,1.9,t);
  if(NG.s==3)for(const e of NG.en)wuni(e.x,e.y,.62,t+e.x*.01);
@@ -72,9 +72,9 @@ function trAdd(p){const l=TRP[TRP.length-1];if(l&&l[0]==p[0]&&l[1]==p[1])return;
   if(TRP.length==DK.length){okS();setQ([['BETH',"Chalk beats chalk, kiddo."],['TOMMY',"MOM! She's abusing CAUSALITY!"]],initL2)}return}
  if(TRP.length&&DK[TRP.length-1][0]==p[0]&&DK[TRP.length-1][1]==p[1]){TRP.pop();return}
  if(TRP.length)TRP.length=0}
-function initGate(){ph=3;gseq();GSTEP=0;GPL=0;GSHOW=0;GAT=0;GR=1;GERR=0;GOP=0;CELLS.forEach(c=>{c.u=0;c.s=0});B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['TOMMY',"STAY OUT of my Froopyland! The gate eats wrong answers, girl!"],['RICK',"A memory gate — Tommy changed the locks! Copy EVERY sequence: FIVE in a row. One mess-up and all five reset!"]])}
+function initGate(){ph=3;gseq();GSTEP=0;GPL=0;GSHOW=0;GAT=0;GR=1;GERR=0;GOP=0;CELLS.forEach(c=>{c.u=0;c.s=0});B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['TOMMY',"STAY OUT of my Froopyland! The gate eats wrong answers, girl!"],['RICK',"A memory gate — Tommy warded the path! Copy EVERY sequence: FIVE in a row. One mess-up and all five reset!"]])}
 function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;CELLS[i].s=T();
- if(i==GSEQ[GPL]){GPL++;if(GPL==3){GAT=0;ding();if(GR>4){GOP=1;setQ([['TOMMY',"Ugh! FINE! The gate's open. Froopyland itself will deal with you, though!"]],initL1)}else{GR++;gseq();GSTEP=0;GPL=0;GSHOW=T()+.6}}}
+ if(i==GSEQ[GPL]){GPL++;if(GPL==3){GAT=0;ding();if(GR>4){GOP=1;setQ([['TOMMY',"Ugh! FINE! The gate's open. Froopyland itself will deal with you, though!"],['RICK',"Beyond it: the meadow with the memory cells I need! Bring 'em to me ONE at a time. Rainbow ladders go UP. Froupies chase — RUN!"]],initCells)}else{GR++;gseq();GSTEP=0;GPL=0;GSHOW=T()+.6}}}
  else{GERR=T();GR=1;GPL=0;GSTEP=0;GAT=0;GSHOW=0;CELLS.forEach(c=>c.u=0);hurt()}}
 // L2: Tommy fight
 let TK={x:900,f:2,dead:0,cd:0},KNIVES=[];
