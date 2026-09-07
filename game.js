@@ -256,11 +256,15 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH
  X.beginPath();X.roundRect(8,chh-PNH+8,cw-16,PNH-14,14);X.fill();X.stroke();
  const pb=PNH-30,px0=12+pb/2,py0=chh-10;
  if(dlg.w=='RICK')rick(px0,py0,pb/79,tk,t);else if(dlg.w=='BETH')beth(px0,py0,pb/50,tk,t);else if(dlg.w=='TOMMY')tommy(px0,py0-29*pb/83,pb/83,0);else uni(px0,py0-56*pb/85,pb/85,t);
- const tx0=8+pb+22;
- X.fillStyle='#111';X.font='800 '+Math.round(PNH*.14)+'px system-ui';X.fillText(dlg.w,tx0,chh-PNH+PNH*.34);
- X.font='500 '+Math.round(PNH*.185)+'px system-ui';let ln='',yy=chh-PNH+PNH*.62;const LW=cw-tx0-26;
- for(const wd of dlg.s.split(' ')){if(X.measureText(ln+wd).width>LW){X.fillText(ln,tx0,yy);yy+=PNH*.24;ln=''}ln+=wd+' '}
- X.fillText(ln,tx0,yy);
+ const tx0=8+pb+22,LW=cw-tx0-26;
+ X.fillStyle='#111';X.font='800 '+Math.round(PNH*.14)+'px system-ui';X.fillText(dlg.w,tx0,chh-PNH+PNH*.32);
+ let fs=Math.round(PNH*.19),lines;
+ for(;;){X.font='500 '+fs+'px system-ui';lines=[];let ln='';
+  for(const wd of dlg.s.split(' ')){if(X.measureText(ln+wd).width>LW){lines.push(ln);ln=''}ln+=wd+' '}
+  if(ln)lines.push(ln);
+  if(lines.length*fs*1.28<=PNH*.66||fs<=11)break;fs-=1}
+ let yy=chh-PNH+PNH*.42+fs*1.1;X.font='500 '+fs+'px system-ui';
+ for(const l of lines){X.fillText(l,tx0,yy);yy+=fs*1.28}
  if(DQ.length){X.fillStyle='#667';X.font='600 '+Math.round(PNH*.12)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-16,chh-16)}
  if(win){X.fillStyle='rgba(255,255,255,.78)';X.fillRect(0,0,cw,chh);X.fillStyle='#111';X.font='900 '+Math.round(Math.min(84,cw*.08))+'px system-ui';X.textAlign='center';X.fillText('TOMMY LIVES. YOU MONSTER.',cw/2,chh/2);X.font='600 '+Math.round(Math.min(30,cw*.045))+'px system-ui';X.fillText('tap — once more',cw/2,chh/2+70)}}
 initL0();let lt=T();(function L(){const t=T(),dt=Math.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
