@@ -38,13 +38,12 @@ const CELLS=[[250,0],[1300,2],[800,3],[400,4],[1150,4]].map(([x,f])=>({x,f,g:0})
 function initL1(){win=0;ph=6;got=0;NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:floorY(0)};B.x=560;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>{NG.s=1;NG.t=0;neigh()})}
 function initCells(){win=0;ph=1;got=0;CR={on:0,x:0,y:0,f:0,p:0};B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0})}
 function wuni(x,gy,s,t){const fl=Math.sin(t*9+x);X.save();X.translate(x,gy-58*s);X.scale(s,s);for(const d of[-1,1]){X.save();X.scale(d,1);X.rotate(-.2-fl*.4);X.fillStyle='rgba(255,255,255,.9)';X.strokeStyle='#000';X.lineWidth=2.2;X.lineJoin='round';X.beginPath();X.moveTo(0,0);X.quadraticCurveTo(30,-14,54,-4);X.quadraticCurveTo(38,0,42,8);X.quadraticCurveTo(22,8,12,5);X.quadraticCurveTo(5,5,0,0);X.closePath();X.fill();X.stroke();X.restore()}X.restore();uni(x,gy,s,t)}
-function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=6)return;NG.t+=dt;
+function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=4)return;NG.t+=dt;
  if(NG.s==1){let mx,my;
   if(NG.t<1.1){mx=1650-950*NG.t/1.1;my=140+590*NG.t/1.1;NG.rx=680;NG.ry=floorY(0)}
   else if(NG.t<1.35){mx=700;my=730}
-  else{const p=Math.min(1,(NG.t-1.35)/1.55);mx=700+100*p;my=730-490*p;NG.rx=mx;NG.ry=my+62;if(p>=1){NG.s=2;NG.t=0;NG.mx=1120;NG.my=190;NG.rx=800;NG.ry=222;setQ(GRABQ,()=>{NG.s=3;NG.t=0})}}
-  NG.mx=mx;NG.my=my;return}
- if(NG.s==3&&NG.k==10&&!NG.x2){NG.x2=1;NG.mx=-160;NG.my=380;NG.en=[];NG.sh=[];NG.t=0;setQ([['RICK',"Wait — *burp* — why is the BIG one flapping back this way?!"],['BETH',"Mama never left, Dad."],['RICK',"SHE WANTS A SECOND COURSE! Same drill, Beth: zap the hatchlings, protect the nest!"]],()=>{NG.s=3;NG.t=0})}
+  else{const p=Math.min(1,(NG.t-1.35)/1.55);if(p<1){mx=700+100*p;my=730-490*p;NG.rx=mx;NG.ry=my+62;NG.mx=mx;NG.my=my}else{NG.s=2;NG.t=0;NG.mx=1120;NG.my=190;NG.rx=800;NG.ry=222;setQ(GRABQ,()=>{NG.s=4;NG.t=0})}return}}
+ if(NG.s==3&&NG.k==10&&!NG.x2){NG.x2=1;NG.en=[];NG.sh=[];NG.t=0;setQ([['RICK',"Wait — *burp* — the nest is ratting like a piñata — MORE of them?!"],['BETH',"Round two, Dad."],['RICK',"SECOND COURSE! Same drill, Beth: zap the hatchlings, protect the nest!"]],()=>{NG.s=3;NG.t=0})}
  if(NG.t>NG.sp&&NG.en.length<5){NG.t=0;NG.sp=Math.max(.5,1.2-NG.k%10*.06);NG.en.push({x:Math.random()<.5?-70:1670,y:170+Math.random()*250})}
  for(const e of NG.en){const dx=800-e.x,dy=182-e.y,d=Math.hypot(dx,dy)||1,v=2+NG.k*.13;e.x+=dx/d*v*dt*60;e.y+=dy/d*v*dt*60;
   if(d<48){e.g=1;NG.hp--;hurt();if(NG.hp>0)say('RICK',"OW! *burp* They're snacking on me! ZAP THEM!")}}
@@ -52,11 +51,10 @@ function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=6)return;NG.t+=dt;
  if(NG.hp<=0){NG.hp=3;NG.en=[];NG.sp=1.5;say('RICK',"NOT dying in a horse's nest today! *burp* FIRE, Beth!")}
  for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&Math.abs(b.x-e.x)<30&&Math.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
  NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
- if(NG.k>=20){NG.s=5;FLS=t;ding();setQ(CSW,()=>{NG.s=6;NG.t=0})}
- if(NG.s==6){NG.mx-=160*dt;NG.my-=60*dt;if(NG.t>2.6){NG.s=7;initCells()}}}
+ if(NG.s==4){NG.mx+=420*dt;NG.my-=240*dt;if(NG.t>2.2){NG.s=3;NG.t=0}return}
+ if(NG.k>=20){NG.s=5;FLS=t;ding();setQ(CSW,initCells)}}
 function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
- if(NG.s>=1&&NG.s<5&&!(NG.s==3&&NG.x2&&NG.k<11))wuni(NG.mx,NG.my,1.9,t);
- if(NG.s==6)wuni(NG.mx,NG.my,1.9,t);
+ if(NG.s==1||NG.s==2||NG.s==4)wuni(NG.mx,NG.my,1.9,t);
  if(NG.s==3)for(const e of NG.en)wuni(e.x,e.y,.62,t+e.x*.01);
  X.strokeStyle='#7a4a20';X.lineWidth=6;X.beginPath();X.ellipse(800,252,88,26,0,0,7);X.stroke();
  X.lineWidth=3.5;X.beginPath();X.moveTo(724,250);X.quadraticCurveTo(800,276,876,250);X.moveTo(740,238);X.lineTo(856,262);X.moveTo(748,264);X.lineTo(850,236);X.stroke();
