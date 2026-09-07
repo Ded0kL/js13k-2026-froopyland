@@ -151,11 +151,21 @@ function draw(t){X.fillStyle=ph==0||ph==3?'#2a2a2a':'#cfcfcf';X.fillRect(0,0,W,H
    X.fillStyle=RB[i];X.beginPath();X.arc(812,py,10,0,7);X.fill();
    if(act){X.fillStyle='#fff';X.font='700 15px system-ui';X.textAlign='left';X.fillText('▶ CLICK TO ROTATE → 0°',820,py-34)}}
   X.fillStyle='#777';X.font='600 14px system-ui';X.textAlign='center';X.fillText('QUANTUM PROJECTOR v13.0 — BOOT SECTOR STRIPPED (13KB LIMIT)',960,590)}
- if(ph==3){X.strokeStyle='#888';X.lineWidth=4;X.strokeRect(150,180,180,320);
-  X.fillStyle='#18dcff';X.globalAlpha=.25;X.fillRect(150,180,180,320);X.globalAlpha=1;
-  X.fillStyle='#888';X.font='600 14px system-ui';X.textAlign='center';X.fillText('CLONE CAPSULE',240,525);
-  X.fillStyle='#fce4d6';X.strokeStyle='#000';X.lineWidth=2;X.beginPath();X.roundRect(580,140,50,22,10);X.fill();X.stroke();
-  X.fillStyle='#888';X.font='600 13px system-ui';X.fillText("Tommy's finger → sequencer",605,128);
+ if(ph==3){X.strokeStyle='#4a4a4a';X.lineWidth=4;X.beginPath();X.moveTo(335,300);X.quadraticCurveTo(440,330,540,225);X.stroke();
+  X.beginPath();X.moveTo(685,225);X.quadraticCurveTo(790,400,880,575);X.stroke();
+  X.strokeStyle='#888';X.lineWidth=4;X.strokeRect(150,180,180,320);
+  X.fillStyle='#18dcff';X.globalAlpha=.22;X.fillRect(150,180,180,320);X.globalAlpha=1;
+  X.fillStyle='rgba(255,255,255,.35)';for(let i=0;i<3;i++){const by=460-((t*40+i*110)%280);X.beginPath();X.arc(195+i*40,by,3+i%2*2,0,7);X.fill()}
+  X.fillStyle='#9aa';X.beginPath();X.ellipse(240,432,26,52,0,0,7);X.fill();
+  X.fillStyle='#2b2b2b';X.fillRect(130,500,220,26);X.fillStyle='#111';X.fillRect(150,486,180,14);
+  X.fillStyle='#888';X.font='600 14px system-ui';X.textAlign='center';X.fillText('CLONE CAPSULE',240,548);
+  X.fillStyle='#222';X.strokeStyle='#666';X.lineWidth=3;X.beginPath();X.roundRect(540,170,140,92,8);X.fill();X.stroke();
+  X.fillStyle='#111';X.fillRect(556,186,108,26);
+  X.fillStyle='#0f0';X.globalAlpha=.5+.5*Math.sin(t*7);X.beginPath();X.arc(662,182,4,0,7);X.fill();X.globalAlpha=1;
+  X.fillStyle='#fce4d6';X.strokeStyle='#000';X.lineWidth=2;X.beginPath();X.roundRect(580,150,50,22,10);X.fill();X.stroke();
+  X.fillStyle='#888';X.font='600 13px system-ui';X.fillText("Tommy's finger → sequencer",608,138);
+  X.fillStyle='#2b2b2b';X.strokeStyle='#666';X.beginPath();X.roundRect(880,556,470,54,8);X.fill();X.stroke();
+  for(let i=0;i<6;i++){X.fillStyle=RB[i];X.globalAlpha=.35+.65*Math.abs(Math.sin(t*3+i));X.beginPath();X.arc(916+i*70,583,7,0,7);X.fill()}X.globalAlpha=1;
   for(let r=0;r<3;r++)for(let c=0;c<4;c++){const gx=920+c*110,gy=160+r*150;
    X.fillStyle=LO[r][c]?'#333':'#2ed573';X.strokeStyle='#888';X.lineWidth=3;
    X.beginPath();X.roundRect(gx,gy,90,90,10);X.fill();X.stroke();
