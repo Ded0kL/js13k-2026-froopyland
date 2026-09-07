@@ -13,6 +13,7 @@ const floorY=f=>780-f*160,LAD=[300,800,1300],nl=x=>LAD.reduce((a,b)=>Math.abs(b-
 const B={x:150,y:floorY(0),f:0,q:[]},R={x:1450,f:4};
 const U=[];for(let i=0;i<3;i++)U.push({x:500+i*300,f:i+1,y:floorY(i+1),wx:0,wt:0,nc:0,st:0});
 let ph=0,got=0,win=0,stepT=0,LOT=0,PZS=0,FNG=0,FLS=0;
+let MENU=1;const startGame=()=>{initA();MENU=0;initL0()};const menuBtn=()=>{const bw=Math.min(340,cw*.62),bh=Math.max(56,Math.min(74,chh*.08));return[cw/2-bw/2,chh*.44-bh/2,bw,bh]};
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0;
@@ -61,12 +62,14 @@ function route(px,py){const tf=Math.max(0,Math.min(4,Math.round((780-py)/160)));
  B.q.push([Math.max(30,Math.min(W-30,px)),floorY(tf)])}
 const K={};
 onkeydown=e=>{initA();const k=e.key.toLowerCase();K[k]=1;if(k.includes('arrow')||k==' ')e.preventDefault();
+ if(MENU){if(k=='enter'||k==' '||k=='e')startGame();return}
  if(DQ.length){if(k=='enter'||k==' '||k=='e')nxt();return}
  if(win&&k=='enter')location.reload()};
 onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
 let J=0;
 CV.onpointerdown=e=>{initA();
+ if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();return}
  if(DQ.length){nxt();return}
  if(win){location.reload();return}
  const[mx,my]=ptr(e);TR=0;
@@ -179,7 +182,22 @@ function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==0?(m?920:1600):ph==5?(
  const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:B.y-60;
  const vw=cw/SS,vh=(chh-PNH)/SS,cx=Math.max(vw/2,Math.min(W-vw/2,fx)),cy=vh>=GH?GH/2:Math.max(vh/2,Math.min(GH-vh/2,fy));
  OX=cw/2-cx*SS;OY=(chh-PNH)/2-cy*SS}
-function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH,tk=DQ.length>0;
+function drawMenu(t){const gy=chh*.8,s=Math.min(1.1,Math.max(.55,Math.min(cw/1150,chh/900)));
+ X.fillStyle='#161616';X.fillRect(0,0,cw,chh);
+ X.globalAlpha=.14;for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=12;X.beginPath();X.arc(cw/2,chh*1.28,chh*.78+i*14,Math.PI,0);X.stroke()}X.globalAlpha=1;
+ X.textAlign='center';X.fillStyle='#fff';
+ X.font='900 '+Math.round(Math.min(84,cw*.11))+'px system-ui';X.fillText('FROOPYLAND',cw/2,chh*.2);
+ X.fillStyle=RB[4];X.font='700 '+Math.round(Math.min(22,cw*.035))+'px system-ui';X.fillText('🦄 UNICORNS & RAINBOWS — js13k 2026',cw/2,chh*.2+Math.min(42,cw*.055));
+ const[bx,by,bw,bh]=menuBtn();
+ X.fillStyle='#1e2b22';X.strokeStyle='#2ed573';X.lineWidth=4;X.beginPath();X.roundRect(bx,by,bw,bh,16);X.fill();X.stroke();
+ X.fillStyle='#fff';X.font='800 '+Math.round(bh*.4)+'px system-ui';X.fillText('▶  PLAY',cw/2,by+bh*.68);
+ X.fillStyle='#888';X.font='600 '+Math.round(Math.max(12,Math.min(16,cw*.028)))+'px system-ui';X.fillText('click PLAY — or press Enter',cw/2,by+bh+34);
+ const names=['RICK','BETH','UNICORNS','TOMMY'],sp=Math.min(170,cw/4.4),x0=cw/2-sp*1.5;
+ X.strokeStyle='#333';X.lineWidth=3;X.beginPath();X.moveTo(x0-sp*.5,gy+6);X.lineTo(x0+sp*3.5,gy+6);X.stroke();
+ rick(x0,gy,s*.9,0,t);beth(x0+sp,gy,s*.9,0,t);uni(x0+sp*2,gy,s*.9,t);tommy(x0+sp*3,gy,s*.9,0);
+ X.fillStyle='#aaa';X.font='700 '+Math.round(Math.max(11,Math.min(15,cw*.026)))+'px system-ui';
+ for(let i=0;i<4;i++)X.fillText(names[i],x0+i*sp,gy+26)}
+function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);return}cam();const GA=chh-PNH,tk=DQ.length>0;
  if(ph==0||ph==5)X.fillStyle='#161616';else{const d=ph==4,g=X.createLinearGradient(0,0,0,GA);g.addColorStop(0,d?'#6a4a5a':'#a5e3ff');g.addColorStop(1,d?'#40303f':'#e6ffd9');X.fillStyle=g}
  X.fillRect(0,0,cw,chh);
  X.setTransform(DPR*SS,0,0,DPR*SS,OX*DPR,OY*DPR);
@@ -276,4 +294,4 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH
  if(DQ.length){X.fillStyle='#667';X.font='600 '+Math.round(PNH*.12)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-16-PNH*.5,chh-16)}
  X.fillStyle=ph==0||ph==5?'#777':'rgba(0,0,0,.35)';X.font='600 11px monospace';X.textAlign='left';X.fillText('v3',cw-30,chh-PNH-8)
  if(win){X.fillStyle='rgba(255,255,255,.78)';X.fillRect(0,0,cw,chh);X.fillStyle='#111';X.font='900 '+Math.round(Math.min(84,cw*.08))+'px system-ui';X.textAlign='center';X.fillText('TOMMY LIVES. YOU MONSTER.',cw/2,chh/2);X.font='600 '+Math.round(Math.min(30,cw*.045))+'px system-ui';X.fillText('tap — once more',cw/2,chh/2+70)}}
-initL0();let lt=T();(function L(){const t=T(),dt=Math.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
+let lt=T();(function L(){const t=T(),dt=Math.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
