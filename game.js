@@ -73,7 +73,7 @@ function trAdd(p){const l=TRP[TRP.length-1];if(l&&l[0]==p[0]&&l[1]==p[1])return;
  if(TRP.length&&DK[TRP.length-1][0]==p[0]&&DK[TRP.length-1][1]==p[1]){TRP.pop();return}
  if(TRP.length)TRP.length=0}
 function initGate(){ph=3;GSEQ=[0,0,0].map(()=>M.floor(M.random()*3));GSTEP=0;GPL=0;GSHOW=0;GAT=0;GR=0;GERR=0;GOP=0;CELLS.forEach(c=>c.u=0);B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['TOMMY',"So you brought the cells? Cute. The gate eats wrong answers, girl!"],['RICK',"A memory gate! Click the cells in the SAME order it shows. Mess up — Tommy gets a good laugh."]])}
-function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;
+function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;CELLS[i].s=T();
  if(i==GSEQ[GPL]){GPL++;if(GPL==3){GAT=0;ding();setQ([['TOMMY',"FINE! Come through. I'll carve that 'sorry' outta you myself!"]],()=>{GOP=1;route(700,floorY(2))})}}
  else{GERR=T();GR++;GPL=0;GSTEP=0;GAT=0;GSHOW=0;CELLS.forEach(c=>c.u=0);hurt()}}
 // L2: Tommy fight
@@ -131,7 +131,7 @@ function update(t,dt){if(win||DQ.length)return;
  if(ph==5){LOT-=dt;if(LOT<=0){initL3();say('RICK',"Time's up! The court granted ONE continuance. Move!")}return}
  moveB(t,dt);
  if(ph==2){if(TRP.length==DK.length){TRC+=dt;if(TRC>2.5){TRC=0;TRP=[]}}return}
- if(ph==3){if(GSHOW&&!GAT&&!GOP){if(t-GSHOW>2){GAT=1;GSHOW=0}else if(t-GT>.55){GT=t;const i=GSEQ[GSTEP];tone(i);CELLS[i].s=t}}
+ if(ph==3){if(GSHOW&&!GAT&&!GOP){if(GSTEP>2&&t-GSHOW>2||t-GSHOW>3){GAT=1;GSHOW=0}else if(GSTEP<3&&t-GT>.55){GT=t;const i=GSEQ[GSTEP];tone(i);CELLS[i].s=T();GSTEP++}}
   else if(!GAT&&!GOP&&t-GERR>1){GSTEP=0;GPL=0;GSHOW=T()}
   if(GOP&&B.x>660)initL2();
   return}
@@ -237,7 +237,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
   X.fillStyle='#111';for(const p of DK){X.beginPath();X.arc(p[0],p[1],6,0,7);X.fill()}
   X.lineCap='round';for(let i=0;i<TRP.length;i++){X.strokeStyle=RB[i%6];X.lineWidth=7;X.beginPath();X.moveTo(...TRP[i?i-1:i]);X.lineTo(...TRP[i]);X.stroke()}}
  if(ph==3){X.font='600 20px system-ui';X.textAlign='center';X.fillStyle='#ddd';X.fillText('memory gate — repeat the order',1085,110);
-  for(let i=0;i<3;i++){const gx=GDX[i]+800,gy=floorY(2)-70,fl=GAT&&GSTEP<3&&CELLS[i].s&&T()-CELLS[i].s<.35;
+  for(let i=0;i<3;i++){const gx=GDX[i]+800,gy=floorY(2)-70,fl=CELLS[i].s&&T()-CELLS[i].s<.35;
    X.fillStyle=fl?RB[i*2]:'#244';X.strokeStyle='#000';X.lineWidth=3;X.beginPath();X.roundRect(gx-45,gy-45,90,90,12);X.fill();X.stroke();
    X.fillStyle='#ffd32a';X.beginPath();X.roundRect(gx-8,gy-34,16,32,3);X.fill();X.strokeRect(gx-3,gy-39,6,5);
    if(CELLS[i].u){X.strokeStyle='#fff';X.lineWidth=4;X.beginPath();X.arc(gx,gy,54,0,7);X.stroke()}
