@@ -14,6 +14,7 @@ const B={x:150,y:floorY(0),f:0,q:[]},R={x:1450,f:4};
 const U=[];for(let i=0;i<3;i++)U.push({x:500+i*300,f:i+1,y:floorY(i+1),wx:0,wt:0,nc:0,st:0});
 let ph=0,got=0,win=0,stepT=0,LOT=0,PZS=0,FNG=0,FLS=0,CR={on:0,x:0,y:0,f:0,p:0};
 let MENU=1;const startGame=()=>{initA();MENU=0;initL0()};const menuBtn=()=>{const bw=M.min(340,cw*.62),bh=M.max(56,M.min(74,chh*.08));return[cw/2-bw/2,chh*.44-bh/2,bw,bh]};
+const DBG=[['GAR',initL0],['NEST',initL1],['CELLS',initCells],['TRACE',initTr],['GATE',initGate],['TOMMY',initL2],['DNA',initL3]],dbgBtn=i=>[10+i*(cw-20)/DBG.length+3,chh-46,(cw-20)/DBG.length-6,34];
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0,DLT=0;
@@ -98,7 +99,7 @@ onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
 let J=0;
 CV.onpointerdown=e=>{initA();
- if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();return}
+ if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();else for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);if(mx>dx&&mx<dx+dw&&my>dy&&my<dy+dh){initA();MENU=0;DBG[i][1]()}return}}
  const r0=CV.getBoundingClientRect(),sy=e.clientY-r0.top;
  if(DQ.length){if(sy>chh-PNH&&T()-DLT>.4)nxt();return}
  if(win){location.reload();return}
@@ -211,7 +212,7 @@ function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==6?(m?700:960):ph==0?(m
  const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:ph==6?800:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:ph==6?(NG.s==1?(NG.t<1.1?540:M.max(330,M.min(540,NG.my))):NG.s>1&&NG.s<5?330:640):B.y-60;
  const vw=cw/SS,vh=(chh-PNH)/SS,cx=M.max(vw/2,M.min(W-vw/2,fx)),cy=vh>=GH?GH/2:M.max(vh/2,M.min(GH-vh/2,fy));
  OX=cw/2-cx*SS;OY=(chh-PNH)/2-cy*SS}
-function drawMenu(t){const gy=chh*.8,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900)));
+function drawMenu(t){const gy=chh*.7,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900)));
  const g=X.createLinearGradient(0,0,0,chh);g.addColorStop(0,'#a5e3ff');g.addColorStop(1,'#e6ffd9');X.fillStyle=g;X.fillRect(0,0,cw,chh);
  X.globalAlpha=.22;for(let i=0;i<3;i++){X.strokeStyle=RB[i*2];X.lineWidth=14;X.beginPath();X.arc(cw/2,chh*1.28,cw*.45+i*18,M.PI,0);X.stroke()}X.globalAlpha=1;
  X.textAlign='center';X.fillStyle='#111';
@@ -220,10 +221,9 @@ function drawMenu(t){const gy=chh*.8,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900
  const[bx,by,bw,bh]=menuBtn(),pu=1+M.sin(t*3)*.03;
  X.save();X.translate(cw/2,by+bh/2);X.scale(pu,pu);X.fillStyle='#2ed573';X.strokeStyle='#1a8f4a';X.lineWidth=4;X.beginPath();X.roundRect(-bw/2,-bh/2,bw,bh,16);X.fill();X.stroke();
  X.fillStyle='#fff';X.font='800 '+M.round(bh*.4)+'px system-ui';X.fillText('▶  PLAY',0,bh*.15);X.restore();
- X.fillStyle='#555';X.font='600 '+M.round(M.max(12,M.min(16,cw*.028)))+'px system-ui';X.fillText('click PLAY — or press Enter',cw/2,by+bh+34);
  const names=['RICK','BETH','UNICORN','TOMMY'],sp=M.min(170,cw/4.4),x0=cw/2-sp*1.5;
- X.strokeStyle='#333';X.lineWidth=3;X.beginPath();X.moveTo(x0-sp*.5,gy+6);X.lineTo(x0+sp*3.5,gy+6);X.stroke();
  rick(x0,gy,s*.9,0,t);beth(x0+sp,gy,s*.9,0,t);uni(x0+sp*2,gy,s*.9,t);tommy(x0+sp*3,gy,s*.9,0);
+ X.font='700 12px system-ui';for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);X.fillStyle='#1d2b22';X.strokeStyle='#2ed573';X.lineWidth=2;X.beginPath();X.roundRect(dx,dy,dw,dh,8);X.fill();X.stroke();X.fillStyle='#aaa';X.fillText(DBG[i][0],dx+dw/2,dy+21)}
  X.fillStyle='#333';X.font='700 '+M.round(M.max(11,M.min(15,cw*.026)))+'px system-ui';
  for(let i=0;i<4;i++)X.fillText(names[i],x0+i*sp,gy+26)}
 function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);return}cam();const GA=chh-PNH,tk=DQ.length>0;
