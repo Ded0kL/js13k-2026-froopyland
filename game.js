@@ -49,7 +49,7 @@ function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=4)return;NG.t+=dt;
  for(const e of NG.en){const dx=800-e.x,dy=182-e.y,d=M.hypot(dx,dy)||1,v=(2+NG.k*.13)*(NG.x2?1.35:1);e.x+=dx/d*v*dt*60;e.y+=dy/d*v*dt*60;
   if(d<48){e.g=1;NG.hp--;hurt();if(NG.hp>0)say('RICK',"OW! "+bq+"They're snacking on me! "+zp+"!")}}
  NG.en=NG.en.filter(e=>!e.g);
- if(NG.hp<=0){hurt();NG={s:3,k:0,hp:1,t:0,sp:1,en:[],sh:[],x2:0,mx:1650,my:140,rx:680,ry:floorY(0)};say('RICK',"They got me! FROM THE TOP, Beth! "+zp+"!")}
+ if(NG.hp<=0){hurt();NG={s:3,k:0,hp:1,t:0,sp:1,en:[],sh:[],x2:0,mx:1650,my:140,rx:800,ry:222};setQ([['RICK',"They got me! FROM THE TOP, Beth! "+zp+"!"]])}
  for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&M.abs(b.x-e.x)<30&&M.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
  NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
  if(NG.k>=20){NG.s=5;FLS=t;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initGate)}}
