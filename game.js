@@ -9,7 +9,7 @@ const clock=()=>snd(1200,.05,'square',.1),okS=()=>{snd(660,.08,'square',.12);set
 const floorY=f=>780-f*160,LAD=[300,800,1300],nl=x=>LAD.reduce((a,b)=>Math.abs(b-x)<Math.abs(a-x)?b:a);
 const B={x:150,y:floorY(0),f:0,q:[]},R={x:1450,f:4};
 const U=[];for(let i=0;i<3;i++)U.push({x:500+i*300,f:i+1,y:floorY(i+1),wx:0,wt:0,nc:0,st:0});
-let ph=0,got=0,win=0,stepT=0,LOT=0,PZS=0,FNG=0;
+let ph=0,got=0,win=0,stepT=0,LOT=0,PZS=0,FNG=0,FLS=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0;
 const setQ=(qs,cb)=>{DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
@@ -77,7 +77,7 @@ function update(t,dt){if(win||DQ.length)return;
   if(FNG==2&&B.f==4&&Math.abs(B.x-1330)<110)initL3();
   return}
  // ph 1
- for(const c of CELLS)if(!c.g&&c.f==B.f&&Math.abs(c.x-B.x)<32){c.g=1;got++;ding();if(got<3)say('BETH',['Got one.','Ew. Sticky.','Two more.'][got-1]);if(got==3)setQ([['RICK',"All three! Now find Tommy — and Beth? Do what you gotta do."]],initL2)}
+ for(const c of CELLS)if(!c.g&&c.f==B.f&&Math.abs(c.x-B.x)<32){c.g=1;got++;FLS=t;ding();if(got<3)say('BETH',['Got one.','Ew. Sticky.','Two more.'][got-1]);if(got==3)setQ([['RICK',"All three! Now find Tommy — and Beth? Do what you gotta do."]],initL2)}
  let chase=0;
  for(const o of U){if(t<o.st)continue;
   if(o.f==B.f&&Math.abs(B.x-o.x)<32){if(got>0){CELLS.push({x:B.x,f:B.f,g:0});got--}B.x=120;B.f=0;B.y=floorY(0);B.q=[];hurt();say('RICK',"They got you?! Walk it off. WALK IT OFF.");U.forEach(u=>u.st=t+3);return}
@@ -119,9 +119,18 @@ function uni(x,gy,s,t){X.fillStyle='rgba(0,0,0,.2)';X.beginPath();X.ellipse(x,gy
  X.beginPath();X.arc(35.5,55.5,1.1,0,7);X.fill();X.beginPath();X.arc(59.5,55.5,1.1,0,7);X.fill();X.fillStyle='#000';
  X.beginPath();X.moveTo(23,68);X.quadraticCurveTo(50,58,77,68);X.stroke();
  X.beginPath();X.arc(41,74,1.5,0,7);X.fill();X.beginPath();X.arc(59,74,1.5,0,7);X.fill();X.restore()}
-function draw(t){X.fillStyle=ph==0||ph==3?'#2a2a2a':'#cfcfcf';X.fillRect(0,0,W,H);
+function bg(t){const d=ph==2,g=X.createLinearGradient(0,0,0,848);g.addColorStop(0,d?'#6a4a5a':'#a5e3ff');g.addColorStop(1,d?'#40303f':'#e6ffd9');X.fillStyle=g;X.fillRect(0,0,W,848);
+ X.globalAlpha=d?.07:.16;for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=11;X.beginPath();X.arc(800,880,430+i*13,Math.PI,0);X.stroke()}X.globalAlpha=1;
+ X.fillStyle=d?'rgba(70,50,70,.6)':'rgba(255,255,255,.8)';
+ for(let i=0;i<4;i++){const cx=((t*14+i*430)%(W+320))-160,cy=105+i*95;X.beginPath();X.arc(cx,cy,26,0,7);X.arc(cx+30,cy-11,19,0,7);X.arc(cx+58,cy+2,22,0,7);X.fill()}
+ X.fillStyle=d?'#41513d':'#93df8f';X.beginPath();X.ellipse(280,858,280,120,0,0,7);X.fill();X.beginPath();X.ellipse(1180,858,320,140,0,0,7);X.fill();
+ for(let i=0;i<3;i++){const tx=[700,480,1230][i],ty=floorY([0,2,3][i]);
+  X.strokeStyle=d?'#4a4a4a':'#a97b50';X.lineWidth=8;X.beginPath();X.moveTo(tx,ty);X.lineTo(tx,ty-52);X.stroke();
+  X.fillStyle=d?'#6a6a6a':['#ff8fa3','#ffd32a','#7bdff2'][i];X.beginPath();X.arc(tx,ty-64,24,0,7);X.fill();
+  X.fillStyle='rgba(255,255,255,.35)';X.beginPath();X.arc(tx-8,ty-72,8,0,7);X.fill()}}
+function draw(t){if(ph==0||ph==3){X.fillStyle='#2a2a2a';X.fillRect(0,0,W,H)}else bg(t);
  if(ph>0){for(const l of LAD)for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=5;X.beginPath();X.moveTo(l+(i-2.5)*5,floorY(4)-4);X.lineTo(l+(i-2.5)*5,floorY(0)+6);X.stroke()}
-  for(let f=0;f<5;f++){X.fillStyle='#43a047';X.fillRect(0,floorY(f),W,14);X.fillStyle='#2e7d32';X.fillRect(0,floorY(f)+14,W,4)}
+  for(let f=0;f<5;f++){X.fillStyle=ph==2?'#57724f':'#43a047';X.fillRect(0,floorY(f),W,14);X.fillStyle=ph==2?'#41563c':'#2e7d32';X.fillRect(0,floorY(f)+14,W,4)}
   const hot=ph==2&&FNG==2;X.fillStyle='#555';X.beginPath();X.arc(1330,floorY(4)-60,46,0,7);X.fill();
   if(hot)for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=7;X.beginPath();X.arc(1330,floorY(4)-60,52+i*6,t*2+i,t*2+i+4.4);X.stroke()}
   X.fillStyle=hot?'#fff':'#aaa';X.beginPath();X.arc(1330,floorY(4)-60,30,0,7);X.fill()}
@@ -191,6 +200,8 @@ function draw(t){X.fillStyle=ph==0||ph==3?'#2a2a2a':'#cfcfcf';X.fillRect(0,0,W,H
  else{rick(430,830,1.6,dlg.w=='RICK'&&DQ.length>0,t);beth(700,830,1.6,dlg.w=='BETH',t)}
  X.fillStyle=ph==0||ph==3?'#ddd':(ph==3&&LOT<10?'#c0392b':'#111');X.font='700 26px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
  X.fillText(ph==0?'CABLES '+PZS+'/3':ph==1?'CELLS '+got+'/3':ph==2?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):'EXECUTION IN '+Math.max(0,LOT).toFixed(1)+'s',30,44);
+ if(ph==2){X.fillStyle='rgba(255,60,60,'+(.05+.04*Math.sin(t*5))+')';X.fillRect(0,0,W,848)}
+ if(ph==1&&t-FLS<.3){X.fillStyle='rgba(255,255,255,'+((1-(t-FLS)/.3)*.4)+')';X.fillRect(0,0,W,848)}
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=3;
  X.beginPath();X.roundRect(20,848,W-40,132,14);X.fill();X.stroke();
  X.beginPath();X.roundRect(34,860,108,108,10);X.stroke();
