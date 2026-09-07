@@ -29,9 +29,9 @@ const CELLS=[[250,0],[1300,2],[800,3]].map(([x,f])=>({x,f,g:0}));
 function initL1(){ph=1;got=0;B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>say('RICK',FMSG))}
 // L2: Tommy fight
 let TK={x:900,f:2,dead:0,cd:0},KNIVES=[];
-function initL2(){ph=2;FNG=0;TK={x:900,f:2,dead:0,cd:0};KNIVES=[];B.q=[];setQ([['RICK',"There he is! Reach Tommy — dodge the knives, Beth!"]])}
+function initL2(){ph=2;FNG=0;TK={x:1450,f:2,dead:0,cd:0,wx:1300,wt:0};KNIVES=[];B.x=120;B.y=floorY(0);B.f=0;B.q=[];setQ([['RICK',"There he is! Cross the arena — dodge the knives, Beth!"]])}
 function killScene(){TK.dead=1;hurt();KNIVES=[];snd(150,.5,'sawtooth',.3,-100);setQ(CS3,()=>{FNG=1;say('RICK',"Now grab the finger!")})}
-function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];KNIVES=[];TK.x=900;TK.f=2;TK.cd=t+1.5;say('RICK',FNG?"Don't lose the finger! Again!":"You got stabbed?! Walk it off, Beth. WALK IT OFF.")}
+function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];KNIVES=[];TK.x=1450;TK.f=2;TK.cd=t+1.5;TK.wx=1300;TK.wt=0;say('RICK',FNG?"Don't lose the finger! Again!":"You got stabbed?! Walk it off, Beth. WALK IT OFF.")}
 // L3: Lights Out DNA (generated solvable from all-green)
 let LO=[],GS=[];
 function initL3(){ph=3;LOT=30;LO=[[0,0,0,0],[0,0,0,0],[0,0,0,0]];GS=[];for(let k=0;k<6;k++){const r=1+Math.floor(Math.random()*2),c=Math.floor(Math.random()*4);GS.push([r,c]);loFlip(r,c,1)}if(loWon()){GS.push([1,0]);loFlip(1,0,1)}setQ(CS4,()=>say('RICK',GMSG))}
@@ -65,12 +65,13 @@ function update(t,dt){if(win||DQ.length)return;
  if(ph==3){LOT-=dt;if(LOT<=0){initL3();say('RICK',"Time's up! The court granted ONE continuance. Move!")}return}
  moveB(t,dt);
  if(ph==2){if(!TK.dead){
-   if(TK.f!=B.f){if(Math.abs(TK.x-800)>10)TK.x+=Math.sign(800-TK.x)*1.4*dt*60;else{TK.f=B.f;TK.x=800}}
-   else{TK.x+=Math.sign(B.x-TK.x)*1.2*dt*60;
-    if(t>TK.cd&&Math.abs(TK.x-B.x)<520&&Math.abs(TK.x-B.x)>70){TK.cd=t+1.7;const d=Math.sign(B.x-TK.x);KNIVES.push({x:TK.x,y:floorY(TK.f)-34,dx:d*5,dy:-3.2,f:TK.f});snd(220,.09,'square',.1)}}
+   if(t>TK.wt){TK.wx=1150+Math.random()*350;TK.wt=t+2+Math.random()*2}
+   TK.x+=Math.sign(TK.wx-TK.x)*Math.min(1.1*dt*60,Math.abs(TK.wx-TK.x));
+   if(t>TK.cd&&Math.abs(TK.x-B.x)<980){TK.cd=t+1.6;const dx=B.x-TK.x,dy=B.y-46-(floorY(TK.f)-34),d=Math.hypot(dx,dy)||1;KNIVES.push({x:TK.x,y:floorY(TK.f)-34,dx:dx/d*5.5,dy:dy/d*5.5-1.6,f:TK.f});snd(220,.09,'square',.1)}
    if(TK.f==B.f&&Math.abs(TK.x-B.x)<44)killScene()}
   for(const kn of KNIVES){if(kn.s)continue;kn.x+=kn.dx;kn.y+=kn.dy;kn.dy+=.16;
-   if(kn.y>floorY(kn.f)-10){kn.y=floorY(kn.f)-10;kn.s=1}
+   const fB=Math.max(0,Math.min(4,Math.floor((780-kn.y)/160)));
+   if(kn.dy>0&&kn.y>=floorY(fB)){kn.y=floorY(fB);kn.s=1}
    if(Math.abs(kn.x-B.x)<24&&Math.abs(kn.y-(B.y-30))<42){caught2(t);return}}
   if(FNG==1&&TK.dead&&B.f==TK.f&&Math.abs(B.x-TK.x)<46){FNG=2;okS();say('BETH',"Ew. It's sticky.");say('RICK',EMSG)}
   if(FNG==2&&B.f==4&&Math.abs(B.x-1330)<110)initL3();
