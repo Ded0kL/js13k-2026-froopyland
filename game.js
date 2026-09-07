@@ -31,7 +31,7 @@ function initL0(){ph=0;PZS=0;PZ=[];for(let i=0;i<3;i++){const p=[0,0,0,0,0];for(
 function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<5)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>2)setQ([['RICK',"Power's linked! The chalk door is open — GO!"]],initL1)}}
 // L1: 3 memory cells
 const CELLS=[[250,0],[1300,2],[800,3]].map(([x,f])=>({x,f,g:0}));
-function initL1(){ph=1;got=0;B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>say('RICK',FMSG))}
+function initL1(){win=0;ph=1;got=0;B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>say('RICK',FMSG))}
 // ph2: trace the chalk counter-door; ph3: memory gate (Simon); ph4: Tommy fight
 const DK=[[1280,340],[1280,270],[1292,215],[1325,180],[1368,170],[1408,192],[1425,235],[1425,340]],GDX=[140,260,380];
 let TRP=[],GSEQ=[],GSTEP=0,GPL=0,GSHOW=0,GAT=0,GR=0,GERR=0,GLK=0,GOP=0,GT=0;
@@ -65,20 +65,28 @@ onkeydown=e=>{initA();const k=e.key.toLowerCase();K[k]=1;if(k.includes('arrow')|
  if(win&&k=='enter')location.reload()};
 onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
+let J=0;
 CV.onpointerdown=e=>{initA();
  if(DQ.length){nxt();return}
  if(win){location.reload();return}
  const[mx,my]=ptr(e);TR=0;
  if(ph==0){if(mx>720&&mx<1200&&my>200&&my<560){const i=Math.max(0,Math.min(2,Math.floor((my-225)/90))),s=Math.max(0,Math.min(4,Math.floor((mx-830)/70)));clickSeg(s)}return}
  if(ph==2){const p=trPt([mx,my]);if(p){if(TRP.length==DK.length){TRP=[];TRC=0}trAdd(p);TR=1}return}
- if(ph==3){for(let i=0;i<3;i++)if(Math.abs(mx-(GDX[i]+800))<55&&Math.abs(my-(floorY(2)-70))<55){gateClick(i);return}route(mx,my);return}
+ if(ph==3){for(let i=0;i<3;i++)if(Math.abs(mx-(GDX[i]+800))<55&&Math.abs(my-(floorY(2)-70))<55){gateClick(i);return}
+  if(e.pointerType=='touch'){J={id:e.pointerId,x:mx,y:my};B.q=[];return}route(mx,my);return}
  if(ph==5){if(mx>900&&mx<1400&&my>140&&my<600){const c=Math.floor((mx-920)/110),r=Math.floor((my-160)/150);if(r>=0&&r<3&&c>=0&&c<4){loFlip(r,c);if(loWon()){win=1;say('RICK',"Wubba lubba dub dub! The clone is ready! We saved a life without making you say 'I'm sorry'. Grab a beer, kiddo — we are amoral geniuses.");burp()}}}return}
+ if(e.pointerType=='touch'){if(Math.hypot(mx-B.x,my-(B.y-40))<60){J=0;B.q=[];return}J={id:e.pointerId,x:mx,y:my};B.q=[];return}
  route(mx,my)};
 CV.onpointermove=e=>{if(!e.buttons||DQ.length||win)return;const[mx,my]=ptr(e);
  if(ph==2){if(TR){const p=trPt([mx,my]);if(p)trAdd(p)}return}
+ if(J&&e.pointerId==J.id){J.x=mx;J.y=my;return}
  if(ph!=1&&ph!=3&&ph!=4)return;route(mx,my)};
+const jend=e=>{if(J&&e.pointerId==J.id)J=0};
+CV.onpointerup=jend;CV.onpointercancel=jend;
 function moveB(t,dt){const vx=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),vy=(K.arrowdown||K.s?1:0)-(K.arrowup||K.w?1:0);
- if(vx||vy){B.q=[];B.x=Math.max(30,Math.min(W-30,B.x+vx*3*dt*60));if(vy&&Math.abs(B.x-nl(B.x))<20)B.y=Math.max(floorY(4),Math.min(floorY(0),B.y+vy*2.6*dt*60));else B.y+=(floorY(B.f)-B.y)*Math.min(1,8*dt)}
+ let ax=vx,ay=vy;
+ if(!ax&&!ay&&J){const dx=J.x-B.x;if(Math.abs(dx)>26)ax=Math.sign(dx);const dy=J.y-40-B.y;if(Math.abs(B.x-nl(B.x))<26&&Math.abs(dy)>30)ay=Math.sign(dy)}
+ if(ax||ay){B.q=[];B.x=Math.max(30,Math.min(W-30,B.x+ax*3*dt*60));if(ay&&Math.abs(B.x-nl(B.x))<26)B.y=Math.max(floorY(4),Math.min(floorY(0),B.y+ay*2.6*dt*60));else B.y+=(floorY(B.f)-B.y)*Math.min(1,8*dt)}
  else if(B.q[0]){const p=B.q[0],dx=p[0]-B.x,dy=p[1]-B.y;if(Math.abs(dx)<8&&Math.abs(dy)<8)B.q.shift();else{B.x+=Math.sign(dx)*Math.min(3*dt*60,Math.abs(dx));B.y+=Math.sign(dy)*Math.min(2.6*dt*60,Math.abs(dy))}}
  B.f=Math.max(0,Math.min(4,Math.round((780-B.y)/160)));
  if(vx||vy||B.q[0]&&t>stepT){stepT=t+.22;step()}}
@@ -262,9 +270,9 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH
  for(;;){X.font='500 '+fs+'px system-ui';lines=[];let ln='';
   for(const wd of dlg.s.split(' ')){if(X.measureText(ln+wd).width>LW){lines.push(ln);ln=''}ln+=wd+' '}
   if(ln)lines.push(ln);
-  if(lines.length*fs*1.28<=PNH*.66||fs<=11)break;fs-=1}
- let yy=chh-PNH+PNH*.42+fs*1.1;X.font='500 '+fs+'px system-ui';
- for(const l of lines){X.fillText(l,tx0,yy);yy+=fs*1.28}
+  if(lines.length*fs*1.18<=PNH*.72||fs<=10)break;fs-=1}
+ let yy=chh-PNH+PNH*.4+fs*1.1;X.font='500 '+fs+'px system-ui';
+ for(const l of lines){X.fillText(l,tx0,yy);yy+=fs*1.18}
  if(DQ.length){X.fillStyle='#667';X.font='600 '+Math.round(PNH*.12)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-16,chh-16)}
  if(win){X.fillStyle='rgba(255,255,255,.78)';X.fillRect(0,0,cw,chh);X.fillStyle='#111';X.font='900 '+Math.round(Math.min(84,cw*.08))+'px system-ui';X.textAlign='center';X.fillText('TOMMY LIVES. YOU MONSTER.',cw/2,chh/2);X.font='600 '+Math.round(Math.min(30,cw*.045))+'px system-ui';X.fillText('tap — once more',cw/2,chh/2+70)}}
 initL0();let lt=T();(function L(){const t=T(),dt=Math.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
