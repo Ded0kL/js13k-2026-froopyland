@@ -1,7 +1,6 @@
 const W=1600,H=1000,GH=848,CV=document.getElementById('c'),X=CV.getContext('2d');
-let cw=0,chh=0,DPR=1,SS=1,OX=0,OY=0,PNH=132,ZM=1,ZC=[800,430];
-function resize(){cw=innerWidth;chh=innerHeight;DPR=Math.min(2,devicePixelRatio||1);CV.width=cw*DPR;CV.height=chh*DPR;PNH=Math.max(104,Math.min(190,Math.max(cw*.15,chh*.14)))}
-try{addEventListener('resize',resize);addEventListener('orientationchange',resize)}catch(e){}resize();
+let cw=0,chh=0,DPR=1,SS=1,OX=0,OY=0,PNH=132;
+function resize(){const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight;if(w==cw&&h==chh)return;cw=w;chh=h;DPR=Math.min(2,devicePixelRatio||1);CV.width=Math.round(cw*DPR);CV.height=Math.round(chh*DPR);PNH=Math.max(104,Math.min(200,Math.max(cw*.17,chh*.16)))}
 const T=()=>performance.now()/1000,RB=['#ff6b81','#ffa502','#ffd32a','#2ed573','#18dcff','#a55eea'];
 let AC=0;const initA=()=>{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)()};
 const snd=(f,d,t,v,sl)=>{if(!AC)return;const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=t;o.frequency.setValueAtTime(f,n);if(sl)o.frequency.linearRampToValueAtTime(f+sl,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+d)};
@@ -172,7 +171,7 @@ function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==0?(m?920:1600):ph==5?(
  const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:B.y-60;
  const vw=cw/SS,vh=(chh-PNH)/SS,cx=Math.max(vw/2,Math.min(W-vw/2,fx)),cy=vh>=GH?GH/2:Math.max(vh/2,Math.min(GH-vh/2,fy));
  OX=cw/2-cx*SS;OY=(chh-PNH)/2-cy*SS}
-function draw(t){X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH,tk=DQ.length>0;
+function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH,tk=DQ.length>0;
  if(ph==0||ph==5)X.fillStyle='#161616';else{const d=ph==4,g=X.createLinearGradient(0,0,0,GA);g.addColorStop(0,d?'#6a4a5a':'#a5e3ff');g.addColorStop(1,d?'#40303f':'#e6ffd9');X.fillStyle=g}
  X.fillRect(0,0,cw,chh);
  X.setTransform(DPR*SS,0,0,DPR*SS,OX*DPR,OY*DPR);
