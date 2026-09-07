@@ -25,7 +25,7 @@ const CS1=[['BETH',"Dad! They're executing Tommy's father today! We go back to F
 const CS2=[['RICK',"W-welcome to Froopyland, sweetie! "+bq+"Built every leaf when you were nine! Child-proofed to hell — NOTHING here can go wrong!"],['BETH',"You built me a murder jungle, Dad."],['RICK',"A SAFE murder jungle! Relax and — hold on. Is that pony wearing WINGS? I did not install wings."]];
 const GRABQ=[['RICK',"LET GO OF ME, YOU OVERGROWN PONY! "+bq+"It thinks I'm its BABY, Beth!"],['BETH',"Very cute. Taking pictures."],['RICK',ht+" incoming and they think I'm FOOD! TAP to "+zp+" — three bites and I'm dinner!"]];
 const CSW=[['RICK',wu+" Mama-pony saw me zap her "+ht+" and made me pack leader! "+bq+"Nature is EASY."],['BETH',"Kidnapped by a unicorn mom — and proud."],['RICK',"Allegedly! Now let's find Tommy's trail. This way! MOVE IT!"]];
-const CS3=[['BETH',"He wanted me to "+so+"?! Screw that! I'd rather slaughter this whole place than apologize!"],['RICK',"Whoa! You literally just murdered him! Total psychopath, just like your old man. Grab his severed finger!"],['RICK',"Get the finger to the TOP-LEFT CORNER! We need his DNA code before his dad gets executed!"]];
+const CS3=[['BETH',"He wanted me to "+so+"?! Screw that! I'd rather slaughter this whole place than apologize!"],['RICK',bq+"Whoa! You literally just murdered him! Total psychopath, just like your old man!"],['RICK',"His DNA is all over the chalk wall — clone material! To the matrix, before the execution!"]];
 const CS4=[['BETH',"The court execution starts in 30 seconds! Put the finger in the machine and clone him, Dad!"],['RICK',"I'm trying! The sequencer chokes on this mutated DNA on a 13KB budget!"]];
 const TS_TAUNT=["STABBY STABBY!","Say "+so+"! SAY IT!","Froopyland-grade knives, Aunt Beth!"],TS_CATCH="You brought a KNIFE?! I'm ELEVEN! ...Ugh, FINE. En garde, aunt Beth!";
 // L0: 3 pipes × 5 segments; click flips segment s and s+1 of active pipe
@@ -80,7 +80,7 @@ function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;CELLS[i].s=T();
 let TK={x:900,f:2,dead:0,cd:0},KNIVES=[],BW={ar:0,got:0,h:0},ARW=0,AIM=0;
 let NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:780};
 function initL2(){ph=4;FNG=0;TK={x:1450,f:2,dead:0,cd:T()+1.2,wx:1300,wt:0,tc:0,fr:0};KNIVES=[];BW={ar:1,got:0,h:0};ARW=0;AIM=0;B.x=120;B.y=floorY(0);B.f=0;B.q=[];setQ([['TOMMY',TS_CATCH],['RICK',"There he is! Grab the PINK ARROW top-left, tap BETH to aim, then tap Tommy to shoot! Dodge the knives!"]])}
-function killScene(){TK.dead=1;hurt();KNIVES=[];snd(150,.5,'sawtooth',.3,-100);setQ(CS3,()=>{FNG=1;say('RICK',"Now grab the finger!")})}
+function killScene(){TK.dead=1;hurt();KNIVES=[];snd(150,.5,'sawtooth',.3,-100);setQ(CS3,initL3)}
 function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];AIM=0;KNIVES=[];TK.x=1450;TK.f=2;TK.cd=t+1.5;TK.wx=1300;TK.wt=0;say('RICK',FNG?"Don't lose the finger! Again!":"You got stabbed?! "+wl)}
 function shoot(mx,my){const dx=mx-B.x,dy=my-(B.y-34),d=M.hypot(dx,dy)||1;ARW={x:B.x,y:B.y-34,dx:dx/d*6,dy:dy/d*6};BW.got=0;snd(520,.08,'square',.1)}
 // L3: Lights Out DNA (generated solvable from all-green)
@@ -155,8 +155,6 @@ function update(t,dt){if(win||DQ.length)return;
    const fB=M.max(0,M.min(4,M.floor((780-kn.y)/160)));
    if(kn.dy>0&&kn.y>=floorY(fB)){kn.y=floorY(fB);kn.s=1}
    if(M.abs(kn.x-B.x)<24&&M.abs(kn.y-(B.y-30))<42){caught2(t);return}}
-  if(FNG==1&&TK.dead&&B.f==TK.f&&M.abs(B.x-TK.x)<46){FNG=2;okS();say('BETH',"Ew. It's sticky.");say('RICK',"Finger to the TOP-LEFT CORNER before the 13KB buffer overflows! RUN!")}
-  if(FNG==2&&B.f==4&&M.abs(B.x-150)<80)initL3();
   return}
  // ph 1
  if(!CR.on)for(const c of CELLS)if(!c.g&&c.f==B.f&&M.abs(c.x-B.x)<32){c.g=1;got++;CR={on:1,x:B.x,y:B.y,f:B.f,p:0};FLS=t;ding();say('BETH',got<5?['Got one. To Rick!','Ew. Sticky. To Rick!','Three to go — to Rick!','Two more. To Rick!','Last one. To Rick!'][got-1]:"That's all five! Here you go, Dad.");break}
@@ -299,15 +297,14 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
   const gy=floorY(TK.f);tommy(TK.x,gy,1,TK.dead);
   if(TK.fr&&!TK.dead){X.fillStyle='#ffd32a';X.font='900 26px system-ui';X.textAlign='center';X.fillText('✶',TK.x,gy-96)}
   if(!TK.dead&&TK.f==B.f&&M.abs(TK.x-B.x)<400){X.fillStyle='#000';X.font='900 32px system-ui';X.textAlign='center';X.fillText('!',TK.x,gy-84)}
-  if(TK.dead){X.fillStyle='#777';X.font='700 20px system-ui';X.fillText('RIP',TK.x-14,gy-70);
-   if(FNG==1){const y=gy-14+M.sin(t*3)*3;X.fillStyle='#fce4d6';X.strokeStyle='#000';X.lineWidth=2;X.beginPath();X.roundRect(TK.x-18,y,36,15,7);X.fill();X.stroke()}}}
+  if(TK.dead){X.fillStyle='#777';X.font='700 20px system-ui';X.fillText('RIP',TK.x-14,gy-70);    }}
  if(ph>0&&ph<5){if(ph<4)rick(ph==1?1500:ph>1&&ph<4?cw-70:R.x,ph==1?floorY(0):floorY(2),.8,dlg.w=='RICK'&&DQ.length>0,t);if(ph==1)for(const o of U)uni(o.x,o.y,1,t);beth(B.x,B.y,1.6,dlg.w=='BETH',t)}else if(ph==6)nestDraw(t);else if(ph==5){rick(430,830,1.6,dlg.w=='RICK'&&DQ.length>0,t);beth(700,830,1.6,dlg.w=='BETH',t)}
 
  X.setTransform(DPR,0,0,DPR,0,0);
  if(ph==4){X.fillStyle='rgba(255,60,60,'+(.05+.04*M.sin(t*5))+')';X.fillRect(0,0,cw,GA)}
  if(ph==1&&t-FLS<.3){X.fillStyle='rgba(255,255,255,'+((1-(t-FLS)/.3)*.4)+')';X.fillRect(0,0,cw,GA)}
  X.fillStyle=ph==0||ph==5?'#ddd':(ph==5&&LOT<10?'#ff6b6b':'#111');X.font='800 '+M.round(PNH*(ph==4?.12:.15))+'px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
- X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5'+(CR.on?' — BRING IT TO RICK':''):ph==2?'TRACE THE LOCK':ph==3?'GATE '+GR+'/5':ph==4?(FNG==2?'RUN ↑←':FNG==1?'TAKE THE FINGER':AIM?'TAP TOMMY — FIRE!':BW.got?'TAP BETH — AIM!':BW.h?BW.h+'/3 — GET ARROW':'DODGE · GET ARROW ↑'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'EXECUTION IN '+M.max(0,LOT).toFixed(1)+'s',16,M.round(PNH*.19));
+ X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5'+(CR.on?' → RICK':''):ph==2?'TRACE THE LOCK':ph==3?'GATE '+GR+'/5':ph==4?(AIM?'TAP TOMMY — FIRE!':BW.got?'TAP BETH — AIM!':BW.h?BW.h+'/3 — GET ARROW':'DODGE · GET ARROW ↑'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'TIME '+M.max(0,LOT).toFixed(1)+'s',16,M.round(PNH*.13));
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=2;
  X.beginPath();X.roundRect(8,chh-PNH+8,cw-16,PNH-14,14);X.fill();X.stroke();
  if(DQ.length){X.strokeStyle='#2ed573';X.lineWidth=3.5+M.sin(t*7)*1.5;X.beginPath();X.roundRect(3,chh-PNH+3,cw-6,PNH-4,18);X.stroke()}
