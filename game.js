@@ -14,7 +14,7 @@ const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0;
 const setQ=(qs,cb)=>{DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
 const nxt=()=>{ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;if(after){const f=after;after=0;f()}}};
-const BMSG="Click the rainbow cables to rotate them to 0°! Link the power supply to the chalk door! Hurry!",FMSG="Grab 3 memory cells, use the rainbow ladders, hack the matrix with your switchblade! Move it!",EMSG="Get the finger to the TOP PORTAL before the 13KB buffer overflows! RUN!",GMSG="Click the nodes to flip you AND your neighbours! All green = DNA matched. 30 seconds!";
+const BMSG="Click the rainbow cables to rotate them to 0°! Link the power supply to the chalk door! Hurry!",FMSG="Grab 3 memory cells, use the rainbow ladders, hack the matrix with your switchblade! Move it!",EMSG="Get the finger to the TOP PORTAL before the 13KB buffer overflows! RUN!",GMSG="Click a node to flip it AND its neighbours! Tip: clear each row by clicking the row BELOW it!";
 const CS1=[['BETH',"Dad, the news says they're executing Tommy's father today for his murder! We have to go back to Froopyland and stop it!"],['RICK',"*Burp*... Alright Beth. I drew the chalk door on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
 const CS2=[['RICK',"We're in! But Tommy-unicorns overrode the matrix. Grab 3 memory cells and hack them with your childhood switchblade!"],['BETH',"The unicorns look... really stabby today."],['RICK',"Froupies LOVE batteries. And memory cells. Don't get trampled!"]];
 const CS3=[['BETH',"He wanted me to say sorry?! Screw that! I'd rather slaughter this whole place than apologize!"],['RICK',"Whoa! You literally just murdered him! Total psychopath, just like your old man. Grab his severed finger!"],['RICK',"Get the finger to the top portal! We need his DNA code before his dad gets executed!"]];
@@ -34,7 +34,7 @@ function killScene(){TK.dead=1;hurt();KNIVES=[];snd(150,.5,'sawtooth',.3,-100);s
 function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];KNIVES=[];TK.x=900;TK.f=2;TK.cd=t+1.5;say('RICK',FNG?"Don't lose the finger! Again!":"You got stabbed?! Walk it off, Beth. WALK IT OFF.")}
 // L3: Lights Out DNA (generated solvable from all-green)
 let LO=[],GS=[];
-function initL3(){ph=3;LOT=30;LO=[[0,0,0,0],[0,0,0,0],[0,0,0,0]];GS=[];for(let k=0;k<6;k++){const r=Math.floor(Math.random()*3),c=Math.floor(Math.random()*4);GS.push([r,c]);loFlip(r,c,1)}if(loWon())loFlip(0,0,1);setQ(CS4,()=>say('RICK',GMSG))}
+function initL3(){ph=3;LOT=30;LO=[[0,0,0,0],[0,0,0,0],[0,0,0,0]];GS=[];for(let k=0;k<6;k++){const r=1+Math.floor(Math.random()*2),c=Math.floor(Math.random()*4);GS.push([r,c]);loFlip(r,c,1)}if(loWon()){GS.push([1,0]);loFlip(1,0,1)}setQ(CS4,()=>say('RICK',GMSG))}
 function loFlip(r,c,silent){for(const[dr,dc]of[[0,0],[0,1],[0,-1],[1,0],[-1,0]]){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<3&&nc>=0&&nc<4)LO[nr][nc]^=1}if(!silent)clock()}
 const loWon=()=>LO.every(row=>row.every(v=>!v));
 function route(px,py){const tf=Math.max(0,Math.min(4,Math.round((780-py)/160)));B.q=[];
