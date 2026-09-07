@@ -1,6 +1,6 @@
 const W=1600,H=1000,GH=848,CV=document.getElementById('c'),X=CV.getContext('2d');
 let cw=0,chh=0,DPR=1,SS=1,OX=0,OY=0,PNH=132;
-function resize(){const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight;if(w==cw&&h==chh)return;cw=w;chh=h;DPR=M.min(2,devicePixelRatio||1);CV.width=M.round(cw*DPR);CV.height=M.round(chh*DPR);PNH=M.max(104,M.min(200,M.max(cw*.17,chh*.16)))}
+function resize(){const w=document.documentElement.clientWidth,h=document.documentElement.clientHeight;if(w==cw&&h==chh)return;cw=w;chh=h;DPR=M.min(2,devicePixelRatio||1);CV.width=M.round(cw*DPR);CV.height=M.round(chh*DPR);PNH=M.max(112,M.min(212,M.max(cw*.18,chh*.21)))}
 const T=()=>performance.now()/1000,RB=['#ff6b81','#ffa502','#ffd32a','#2ed573','#18dcff','#a55eea'];
 let AC=0;const initA=()=>{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)()};
 const snd=(f,d,t,v,sl)=>{if(!AC)return;const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=t;o.frequency.setValueAtTime(f,n);if(sl)o.frequency.linearRampToValueAtTime(f+sl,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+d)};
@@ -313,7 +313,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
  for(;;){X.font='500 '+fs+'px system-ui';lines=[];let ln='';
   for(const wd of dlg.s.split(' ')){if(X.measureText(ln+wd).width>LW){lines.push(ln);ln=''}ln+=wd+' '}
   if(ln)lines.push(ln);
-  if(lines.length*fs*1.18<=PNH*.72||fs<=10)break;fs-=1}
+  if(lines.length*fs*1.18<=PNH*.78||fs<=10)break;fs-=1}
  let yy=chh-PNH+PNH*.4+fs*1.1;X.font='500 '+fs+'px system-ui';
  for(const l of lines){X.fillText(l,tx0,yy);yy+=fs*1.18}
  if(DQ.length){X.fillStyle='#2a9d5c';X.font='800 '+M.round(PNH*.15)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-20,chh-14)}
