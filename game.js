@@ -12,9 +12,8 @@ const scratch=()=>snd(1600+M.random()*700,.03,'triangle',.05),tone=i=>snd([520,6
 const floorY=f=>780-f*160,LAD=[300,800,1300],nl=x=>LAD.reduce((a,b)=>M.abs(b-x)<M.abs(a-x)?b:a);
 const B={x:150,y:floorY(0),f:0,q:[]},R={x:1450,f:4};
 const U=[];for(let i=0;i<3;i++)U.push({x:500+i*300,f:i+1,y:floorY(i+1),wx:0,wt:0,nc:0,st:0});
-let ph=0,got=0,win=0,stepT=0,PZS=0,FNG=0,FLS=0,CR={on:0,x:0,y:0,f:0,p:0},DN=[];
+let ph=0,got=0,win=0,stepT=0,PZS=0,FLS=0,CR={on:0,x:0,y:0,f:0,p:0},DN=[];
 let MENU=1;const startGame=()=>{initA();MENU=0;initL0()};const menuBtn=()=>{const bw=M.min(340,cw*.62),bh=M.max(56,M.min(74,chh*.08));return[cw/2-bw/2,chh*.44-bh/2,bw,bh]};
-const DBG=[['GAR',initL0],['NEST',initL1],['GATE',initGate],['CELLS',initCells],['TRACE',initTr],['TOMMY',initL2],['DNA',initL3]],dbgBtn=i=>[10+i*(cw-20)/DBG.length+3,chh-46,(cw-20)/DBG.length-6,34];
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0,DLT=0;
@@ -79,9 +78,9 @@ function gateClick(i){if(!GAT)return;tone(i);CELLS[i].u=1;CELLS[i].s=T();
 // L2: Tommy fight
 let TK={x:900,f:2,dead:0,cd:0},KNIVES=[],BW={ar:0,got:0,h:0},ARW=0,AIM=0;
 let NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:780};
-function initL2(){ph=4;FNG=0;TK={x:1450,f:2,dead:0,cd:T()+1.2,wx:1300,wt:0,tc:0,fr:0};KNIVES=[];BW={ar:1,got:0,h:0};ARW=0;AIM=0;B.x=120;B.y=floorY(0);B.f=0;B.q=[];setQ([['TOMMY',TS_CATCH],['RICK',"There he is! Grab the PINK ARROW top-left, tap BETH to aim, then tap Tommy to shoot! Dodge the knives!"]])}
+function initL2(){ph=4;TK={x:1450,f:2,dead:0,cd:T()+1.2,wx:1300,wt:0,tc:0,fr:0};KNIVES=[];BW={ar:1,got:0,h:0};ARW=0;AIM=0;B.x=120;B.y=floorY(0);B.f=0;B.q=[];setQ([['TOMMY',TS_CATCH],['RICK',"There he is! Grab the PINK ARROW top-left, tap BETH to aim, then tap Tommy to shoot! Dodge the knives!"]])}
 function killScene(){TK.dead=1;hurt();KNIVES=[];snd(150,.5,'sawtooth',.3,-100);setQ(CS3,initL3)}
-function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];AIM=0;KNIVES=[];TK.x=1450;TK.f=2;TK.cd=t+1.5;TK.wx=1300;TK.wt=0;say('RICK',FNG?"Don't lose the finger! Again!":"You got stabbed?! "+wl)}
+function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];AIM=0;KNIVES=[];TK.x=1450;TK.f=2;TK.cd=t+1.5;TK.wx=1300;TK.wt=0;say('RICK',"You got stabbed?! "+wl)}
 function shoot(mx,my){const dx=mx-B.x,dy=my-(B.y-34),d=M.hypot(dx,dy)||1;ARW={x:B.x,y:B.y-34,dx:dx/d*6,dy:dy/d*6};BW.got=0;snd(520,.08,'square',.1)}
 // L3: Lights Out DNA (generated solvable from all-green)
 
@@ -105,7 +104,7 @@ onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
 let J=0;
 CV.onpointerdown=e=>{initA();
- if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();else{for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);if(mx>dx&&mx<dx+dw&&my>dy&&my<dy+dh){initA();MENU=0;DBG[i][1]();break}}return}}
+ if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();return}
  const r0=CV.getBoundingClientRect(),sy=e.clientY-r0.top;
  if(DQ.length){if(sy>chh-PNH&&T()-DLT>.4)nxt();return}
  if(win){location.reload();return}
@@ -232,7 +231,6 @@ function drawMenu(t){const gy=chh*.7,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900
  X.fillStyle='#fff';X.font='800 '+M.round(bh*.4)+'px system-ui';X.fillText('▶  PLAY',0,bh*.15);X.restore();
  const names=['RICK','BETH','UNICORN','TOMMY'],sp=M.min(170,cw/4.4),x0=cw/2-sp*1.5;
  rick(x0,gy,s*.9,0,t);beth(x0+sp,gy,s*.9,0,t);uni(x0+sp*2,gy,s*.9,t);tommy(x0+sp*3,gy,s*.9,0);
- X.font='700 12px system-ui';for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);X.fillStyle='#1d2b22';X.strokeStyle='#2ed573';X.lineWidth=2;X.beginPath();X.roundRect(dx,dy,dw,dh,8);X.fill();X.stroke();X.fillStyle='#aaa';X.fillText(DBG[i][0],dx+dw/2,dy+21)}
  X.fillStyle='#333';X.font='700 '+M.round(M.max(11,M.min(15,cw*.026)))+'px system-ui';
  for(let i=0;i<4;i++)X.fillText(names[i],x0+i*sp,gy+26)}
 function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);return}if(ph==0||ph==2||ph==3||ph==5){SS=1;OX=0;OY=0}else cam();const GA=chh-PNH,tk=DQ.length>0;
@@ -331,6 +329,6 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
  let yy=chh-PNH+PNH*.34+fs*1.1;X.font='500 '+fs+'px system-ui';
  for(const l of lines){X.fillText(l,tx0,yy);yy+=fs*1.18}
  if(DQ.length){X.fillStyle='#2a9d5c';X.font='800 '+M.round(PNH*.15)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-20,chh-14)}
- X.fillStyle=ph==0||ph==5?'#777':'rgba(0,0,0,.35)';X.font='600 11px monospace';X.textAlign='left';X.fillText('v4',cw-30,chh-PNH-8)
+
  if(win){X.fillStyle='rgba(255,255,255,.78)';X.fillRect(0,0,cw,chh);X.fillStyle='#111';X.font='900 '+M.round(M.min(84,cw*.08))+'px system-ui';X.textAlign='center';X.fillText('TOMMY LIVES. YOU MONSTER.',cw/2,chh/2);X.font='700 '+M.round(M.min(24,cw*.038))+'px system-ui';X.fillText('Froopyland saved. Rainbows restored. *burp* WUBBA LUBBA DUB DUB!',cw/2,chh/2+52);X.font='600 '+M.round(M.min(30,cw*.045))+'px system-ui';X.fillText('tap — once more',cw/2,chh/2+100)}}
 let lt=T();(function L(){const t=T(),dt=M.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
