@@ -273,6 +273,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);cam();const GA=chh-PNH
   if(lines.length*fs*1.18<=PNH*.72||fs<=10)break;fs-=1}
  let yy=chh-PNH+PNH*.4+fs*1.1;X.font='500 '+fs+'px system-ui';
  for(const l of lines){X.fillText(l,tx0,yy);yy+=fs*1.18}
- if(DQ.length){X.fillStyle='#667';X.font='600 '+Math.round(PNH*.12)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-16,chh-16)}
+ if(DQ.length){X.fillStyle='#667';X.font='600 '+Math.round(PNH*.12)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-16-PNH*.5,chh-16)}
+ X.fillStyle=ph==0||ph==5?'#777':'rgba(0,0,0,.35)';X.font='600 11px monospace';X.textAlign='left';X.fillText('v3',cw-30,chh-PNH-8)
  if(win){X.fillStyle='rgba(255,255,255,.78)';X.fillRect(0,0,cw,chh);X.fillStyle='#111';X.font='900 '+Math.round(Math.min(84,cw*.08))+'px system-ui';X.textAlign='center';X.fillText('TOMMY LIVES. YOU MONSTER.',cw/2,chh/2);X.font='600 '+Math.round(Math.min(30,cw*.045))+'px system-ui';X.fillText('tap — once more',cw/2,chh/2+70)}}
 initL0();let lt=T();(function L(){const t=T(),dt=Math.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
