@@ -84,14 +84,14 @@ function caught2(t){hurt();B.x=120;B.f=0;B.y=floorY(0);B.q=[];AIM=0;KNIVES=[];TK
 function shoot(mx,my){const dx=mx-B.x,dy=my-(B.y-34),d=M.hypot(dx,dy)||1;ARW={x:B.x,y:B.y-34,dx:dx/d*6,dy:dy/d*6};BW.got=0;snd(520,.08,'square',.1)}
 // L3: Lights Out DNA (generated solvable from all-green)
 
-function initL3(){ph=5;DN=[];for(let r=0;r<6;r++)DN.push([0,0,0,0,0,0]);
- let r=M.floor(M.random()*6);const rows=[];for(let c=0;c<6;c++){rows[c]=r;if(c<5)r=M.max(0,M.min(5,r+M.floor(M.random()*5)-2))}
- for(let c=0;c<6;c++){const a=M.min(rows[c],c<5?rows[c+1]:rows[c]),b=M.max(rows[c],c<5?rows[c+1]:rows[c]);
-  for(let rr=a;rr<=b;rr++){let m=0;if(rr==rows[c])m|=8;if(c<5&&rr==rows[c+1]||c==5)m|=2;if(rr>a)m|=1;if(rr<b)m|=4;DN[rr][c]=m}}
- for(let r2=0;r2<6;r2++)for(let c2=0;c2<6;c2++)if(!DN[r2][c2])DN[r2][c2]=[3,5,6,9,10,12,7,14,13,11][M.floor(M.random()*10)];
- let t2=0;do{for(let k=0;k<36;k++){const n=M.floor(M.random()*4);for(let j=0;j<n;j++)DN[k/6|0][k%6]=((DN[k/6|0][k%6]<<1)|(DN[k/6|0][k%6]>>3))&15}}while(dnWon()&&++t2<9);
- setQ(CS4,()=>say('RICK',"Tap a cable to rotate it 90°! Connect the LEFT edge to the RIGHT edge!"))}
-const dnWon=()=>{const Q=[];for(let r=0;r<6;r++)if(DN[r][0]&8)Q.push([r,0]);const V={};while(Q.length){const[r,c]=Q.pop();const k=r+','+c;if(V[k])continue;V[k]=1;if(c==5&&DN[r][5]&2)return 1;const m=DN[r][c];if(m&1&&r>0&&DN[r-1][c]&4)Q.push([r-1,c]);if(m&4&&r<5&&DN[r+1][c]&1)Q.push([r+1,c]);if(m&2&&c<5&&DN[r][c+1]&8)Q.push([r,c+1]);if(m&8&&c>0&&DN[r][c-1]&2)Q.push([r,c-1])}return 0};
+function initL3(){ph=5;const DC=12,DR=6;DN=[];for(let r=0;r<DR;r++)DN.push(Array(DC).fill(0));
+ const rows=[];for(let c=0;c<DC;c++)rows[c]=M.min(DR-1,M.max(0,M.round(c*5/(DC-1)+(c&&c<DC-1?M.floor(M.random()*3)-1:0))));
+ for(let c=0;c<DC;c++){const nr=c<DC-1?rows[c+1]:rows[c],a=M.min(rows[c],nr),b=M.max(rows[c],nr);
+  for(let rr=a;rr<=b;rr++){let m=0;if(rr==rows[c])m|=8;if(c<DC-1&&rr==nr||c==DC-1)m|=2;if(rr>a)m|=1;if(rr<b)m|=4;DN[rr][c]=m}}
+ for(let r2=0;r2<DR;r2++)for(let c2=0;c2<DC;c2++)if(!DN[r2][c2])DN[r2][c2]=[3,5,6,9,10,12,7,14,13,11][M.floor(M.random()*10)];
+ let t2=0;do{for(let r2=0;r2<DR;r2++)for(let c2=0;c2<DC;c2++){const n=M.floor(M.random()*4);for(let j=0;j<n;j++)DN[r2][c2]=((DN[r2][c2]<<1)|(DN[r2][c2]>>3))&15}}while(dnWon()&&++t2<9);
+ setQ(CS4,()=>say('RICK',"Tap a cable to rotate it 90°! Connect TOP-LEFT to BOTTOM-RIGHT!"))}
+const dnWon=()=>{const Q=[];if(DN[0][0]&8)Q.push([0,0]);const V={};while(Q.length){const[r,c]=Q.pop();const k=r+','+c;if(V[k])continue;V[k]=1;if(r==5&&c==11&&DN[5][11]&2)return 1;const m=DN[r][c];if(m&1&&r>0&&DN[r-1][c]&4)Q.push([r-1,c]);if(m&4&&r<5&&DN[r+1][c]&1)Q.push([r+1,c]);if(m&2&&c<11&&DN[r][c+1]&8)Q.push([r,c+1]);if(m&8&&c>0&&DN[r][c-1]&2)Q.push([r,c-1])}return 0};
 function route(px,py){const tf=M.max(0,M.min(4,M.round((780-py)/160)));B.q=[];
  if(tf!=B.f){const l=nl(B.x);B.q.push([l,floorY(B.f)],[l,floorY(tf)])}
  B.q.push([M.max(30,M.min(W-30,px)),floorY(tf)])}
@@ -107,7 +107,7 @@ CV.onpointerdown=e=>{initA();
  if(ph==2){const p=trPt([mx,my]);if(p){if(TRP.length==DK.length){TRP=[];TRC=0}trAdd(p);TR=1}return}
  if(ph==3){for(let i=0;i<3;i++){const[gx,gy]=gxy(i);if(M.abs(mx-gx)<55&&M.abs(my-gy)<55){gateClick(i);return}}
   if(e.pointerType=='touch'){J={id:e.pointerId,x:mx,y:my};B.q=[];return}route(mx,my);return}
- if(ph==5){const gs=M.min(cw/6,(chh-PNH)/6),ox=(cw-6*gs)/2,oy=((chh-PNH)-6*gs)/2,c=M.floor((mx-ox)/gs),r=M.floor((my-oy)/gs);if(c>=0&&c<6&&r>=0&&r<6){DN[r][c]=((DN[r][c]<<1)|(DN[r][c]>>3))&15;clock();if(dnWon()){win=1;ding();say('RICK',wu+" The clone is ready! We saved a life without having to "+so+". Grab a beer, kiddo — we are amoral geniuses.");burp()}}return}
+ if(ph==5){const gs=M.min(cw/12,(chh-PNH-80)/6),ox=(cw-12*gs)/2,oy=60+((chh-PNH-80)-6*gs)/2,c=M.floor((mx-ox)/gs),r=M.floor((my-oy)/gs);if(c>=0&&c<12&&r>=0&&r<6){DN[r][c]=((DN[r][c]<<1)|(DN[r][c]>>3))&15;clock();if(dnWon()){win=1;ding();say('RICK',wu+" The clone is ready! We saved a life without having to "+so+". Grab a beer, kiddo — we are amoral geniuses.");burp()}}return}
  if(ph==4&&AIM&&M.hypot(mx-B.x,my-(B.y-40))<60){AIM=0;return}
  if(ph==4&&AIM){shoot(mx,my);AIM=0;return}
  if(ph==4&&BW.got&&M.hypot(mx-B.x,my-(B.y-40))<60){AIM=1;B.q=[];J=0;return}
@@ -262,7 +262,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
     X.strokeStyle=on?'#555':RB[(i*2+s)%6];X.lineWidth=act?8:6;X.beginPath();X.moveTo(-hl,0);X.lineTo(hl,0);X.stroke();X.restore()}
    X.fillStyle=RB[i];X.beginPath();X.arc(cw/2-3.5*sp-hl-16,GY(i),10,0,7);X.fill();
    if(act){X.fillStyle='#fff';X.font='700 17px system-ui';X.fillText('▶ CLICK TO ROTATE → 0°',cw/2,GY(i)-hl-14)}}}
- if(ph==5){const gs=M.min(cw/6,(chh-PNH-80)/6),ox=(cw-6*gs)/2,oy=60+((chh-PNH-80)-6*gs)/2,hl=gs*.09;
+ if(ph==5){const gs=M.min(cw/12,(chh-PNH-80)/6),ox=(cw-12*gs)/2,oy=60+((chh-PNH-80)-6*gs)/2,hl=gs*.09;
   if(ox>150){const ks=M.min(1,(ox-60)/260);
    X.save();X.translate(ox/2,oy+3*gs);X.scale(ks,ks);X.translate(-240,-380);
    X.strokeStyle='#888';X.lineWidth=4;X.strokeRect(150,180,180,320);
@@ -282,17 +282,18 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
    X.restore();
    X.strokeStyle='rgba(46,213,115,.4)';X.lineWidth=2;X.setLineDash([7,9]);
    X.beginPath();X.moveTo(ox/2+115*ks,oy+3*gs);X.lineTo(ox-12,oy+3*gs);X.moveTo(ox+6*gs+12,oy+3*gs);X.lineTo(cw-ox/2-75*ks,oy+3*gs);X.stroke();X.setLineDash([])}
-  X.strokeStyle='#2ed573';X.lineWidth=6;X.beginPath();X.moveTo(ox-8,oy);X.lineTo(ox-8,oy+6*gs);X.moveTo(ox+6*gs+8,oy);X.lineTo(ox+6*gs+8,oy+6*gs);X.stroke();
-  if(ox>40){X.fillStyle='#2ed573';X.font='800 14px system-ui';X.textAlign='center';X.fillText('IN',ox-26,oy+3*gs);X.fillText('OUT',ox+6*gs+26,oy+3*gs)}
-  X.strokeStyle='#2c2c2c';X.lineWidth=1;for(let k=0;k<=6;k++){X.beginPath();X.moveTo(ox+k*gs,oy);X.lineTo(ox+k*gs,oy+6*gs);X.moveTo(ox,oy+k*gs);X.lineTo(ox+6*gs,oy+k*gs);X.stroke()}
-  for(let r=0;r<6;r++)for(let c=0;c<6;c++){const m=DN[r][c],cx=ox+c*gs+gs/2,cy=oy+r*gs+gs/2,h=gs/2;
+  X.strokeStyle='#2ed573';X.lineWidth=6;X.beginPath();X.moveTo(ox-8,oy);X.lineTo(ox-8,oy+gs);X.moveTo(ox+12*gs+8,oy+5*gs);X.lineTo(ox+12*gs+8,oy+6*gs);X.stroke();
+  if(ox>40){X.fillStyle='#2ed573';X.font='800 14px system-ui';X.textAlign='center';X.fillText('IN',ox-26,oy+gs/2);X.fillText('OUT',ox+12*gs+26,oy+5.5*gs)}
+  X.strokeStyle='#2c2c2c';X.lineWidth=1;for(let k=0;k<=12;k++){X.beginPath();X.moveTo(ox+k*gs,oy);X.lineTo(ox+k*gs,oy+6*gs);X.stroke()}
+  for(let k=0;k<=6;k++){X.beginPath();X.moveTo(ox,oy+k*gs);X.lineTo(ox+12*gs,oy+k*gs);X.stroke()}
+  for(let r=0;r<6;r++)for(let c=0;c<12;c++){const m=DN[r][c],cx=ox+c*gs+gs/2,cy=oy+r*gs+gs/2,h=gs/2;
    X.strokeStyle='#18dcff';X.lineWidth=hl*2;X.lineCap='round';
    if(m&1){X.beginPath();X.moveTo(cx,cy);X.lineTo(cx,cy-h);X.stroke()}
    if(m&2){X.beginPath();X.moveTo(cx,cy);X.lineTo(cx+h,cy);X.stroke()}
    if(m&4){X.beginPath();X.moveTo(cx,cy);X.lineTo(cx,cy+h);X.stroke()}
    if(m&8){X.beginPath();X.moveTo(cx,cy);X.lineTo(cx-h,cy);X.stroke()}
    X.fillStyle='#0c0c0c';X.beginPath();X.arc(cx,cy,hl,0,7);X.fill()}
-  X.fillStyle='#777';X.font='600 16px system-ui';X.textAlign='center';X.fillText('DNA CABLES — CONNECT LEFT EDGE → RIGHT EDGE',cw/2,oy-14)}
+  X.fillStyle='#777';X.font='600 16px system-ui';X.textAlign='center';X.fillText('DNA CABLES — TOP-LEFT → BOTTOM-RIGHT',cw/2,oy-14)}
  if(ph==4){for(const kn of KNIVES){X.save();X.translate(kn.x,kn.y);X.rotate(M.atan2(kn.dy,kn.dx)+M.PI/2);
    X.strokeStyle='#000';X.lineWidth=3;X.beginPath();X.moveTo(0,-11);X.lineTo(0,11);X.moveTo(0,-11);X.lineTo(4,-5);X.moveTo(0,-11);X.lineTo(-4,-5);X.stroke();X.restore()}
   if(BW.ar&&!BW.got){const ay=floorY(4)-28+M.sin(t*3)*4;X.strokeStyle='#ff6b81';X.lineWidth=4;X.lineCap='round';X.beginPath();X.moveTo(128,ay);X.lineTo(172,ay);X.moveTo(172,ay);X.lineTo(163,ay-6);X.moveTo(172,ay);X.lineTo(163,ay+6);X.moveTo(128,ay);X.lineTo(137,ay-6);X.moveTo(128,ay);X.lineTo(137,ay+6);X.stroke()}
