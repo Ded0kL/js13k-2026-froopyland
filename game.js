@@ -21,10 +21,10 @@ let DQ=[],ST=0,after=0,DLT=0;
 const setQ=(qs,cb)=>{DLT=T();DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
 const nxt=()=>{DLT=T();ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;if(after){const f=after;after=0;f()}}};
 const M=Math,bq="*burp* ",wu="Wubba lubba dub dub!",fl="flip it AND its neighbour",cd="chalk door",so="say sorry",wl="Walk it off. WALK IT OFF.",ht="hatchlings",zp="zap them";
-const CS1=[['BETH',"Dad, the news says they're executing Tommy's father today! We have to go back to Froopyland and stop it!"],['RICK',bq+"Alright Beth. I drew the "+cd+" on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
+const CS1=[['BETH',"Dad! They're executing Tommy's father today! We go back to Froopyland and stop it!"],['RICK',bq+"Alright Beth. I drew the "+cd+" on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
 const CS2=[['RICK',"W-welcome to Froopyland, sweetie! "+bq+"Built every leaf when you were nine! Child-proofed to hell — NOTHING here can go wrong!"],['BETH',"You built me a murder jungle, Dad."],['RICK',"A SAFE murder jungle! Relax and — hold on. Is that pony wearing WINGS? I did not install wings."]];
 const GRABQ=[['RICK',"LET GO OF ME, YOU OVERGROWN PONY! "+bq+"It thinks I'm its BABY, Beth!"],['BETH',"Very cute. Taking pictures."],['RICK',ht+" incoming and they think I'm FOOD! TAP to "+zp+" — three bites and I'm dinner!"]];
-const CSW=[['RICK',wu+" Mama-pony saw me zap her "+ht+" and made me pack leader! "+bq+"Nature is EASY."],['BETH',"Kidnapped by a unicorn mom — and proud."],['RICK',"Allegedly! Now: five memory cells — bring 'em to me ONE at a time, I'll stick 'em into the matrix. Rainbow ladders go UP. Froupies chase — RUN! MOVE IT!"]];
+const CSW=[['RICK',wu+" Mama-pony saw me zap her "+ht+" and made me pack leader! "+bq+"Nature is EASY."],['BETH',"Kidnapped by a unicorn mom — and proud."],['RICK',"Allegedly! Now: five memory cells — bring 'em to me ONE at a time. Rainbow ladders go UP. Froupies chase — RUN! MOVE IT!"]];
 const CS3=[['BETH',"He wanted me to "+so+"?! Screw that! I'd rather slaughter this whole place than apologize!"],['RICK',"Whoa! You literally just murdered him! Total psychopath, just like your old man. Grab his severed finger!"],['RICK',"Get the finger to the top portal! We need his DNA code before his dad gets executed!"]];
 const CS4=[['BETH',"The court execution starts in 30 seconds! Put the finger in the machine and clone him, Dad!"],['RICK',"I'm trying! The sequencer chokes on this mutated DNA on a 13KB budget!"]];
 const TS_TAUNT=["STABBY STABBY!","Say "+so+"! SAY IT!","Froopyland-grade knives, Aunt Beth!"],TS_CATCH="You brought a KNIFE?! I'm ELEVEN! ...Ugh, FINE. En garde, aunt Beth!";
@@ -63,10 +63,10 @@ function nestDraw(t){beth(B.x,B.y,1.6,dlg.w=='BETH',t);
  X.strokeStyle='#7a4a20';X.lineWidth=6;X.beginPath();X.moveTo(726,252);X.quadraticCurveTo(800,278,874,252);X.stroke();
  for(const b of NG.sh){X.strokeStyle=RB[b.c%6];X.lineWidth=5;X.beginPath();X.moveTo(b.x,b.y);X.lineTo(b.x-b.dx*3,b.y-b.dy*3);X.stroke()}}
 // ph2: trace the chalk counter-door; ph3: memory gate (Simon); ph4: Tommy fight
-const DK=[[1280,340],[1280,270],[1292,215],[1325,180],[1368,170],[1408,192],[1425,235],[1425,340]],GDX=[140,260,380];
+let DK=[];const genDK=()=>{DK=[];for(let k=0;k<30;k++){const r=M.floor(k/3),c=k%3,cc=r%2?2-c:c;DK.push([[1280,1360,1448][cc]+(M.random()*16-8),592-r*46+(M.random()*10-5)])}},GDX=[140,260,380];
 let TRP=[],GSEQ=[],GSTEP=0,GPL=0,GSHOW=0,GAT=0,GR=0,GERR=0,GLK=0,GOP=0,GT=0;
-function initTr(){ph=2;TRP=[];B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['RICK',"Tommy sealed his arena with a "+cd+" lock! Hold and drag along the dots!"],['TOMMY',"You'll never draw it right! You failed drawing AND me, aunt Beth!"]])}
-function trPt(m){for(const p of DK)if(M.hypot(m[0]-p[0],m[1]-p[1])<34)return p;return 0};
+function initTr(){ph=2;TRP=[];genDK();B.x=150;B.y=floorY(2);B.f=2;B.q=[];setQ([['RICK',"Tommy sealed his arena with a "+cd+" lock! Hold and drag along the dots!"],['TOMMY',"You'll never draw it right! You failed drawing AND me, aunt Beth!"]])}
+function trPt(m){let b=0,bd=99;for(const p of DK){const d=M.hypot(m[0]-p[0],m[1]-p[1]);if(d<34&&d<bd){b=p;bd=d}}return b};
 function trAdd(p){const l=TRP[TRP.length-1];if(l&&l[0]==p[0]&&l[1]==p[1])return;
  if(TRP.length<DK.length&&DK[TRP.length][0]==p[0]&&DK[TRP.length][1]==p[1]){TRP.push(p);scratch();
   if(TRP.length==DK.length){okS();setQ([['BETH',"Chalk beats chalk, kiddo."],['TOMMY',"MOM! She's abusing CAUSALITY!"]],initGate)}return}
@@ -148,7 +148,7 @@ function update(t,dt){if(win||DQ.length)return;
   if(FNG==2&&B.f==4&&M.abs(B.x-1330)<110)initL3();
   return}
  // ph 1
- if(!CR.on)for(const c of CELLS)if(!c.g&&c.f==B.f&&M.abs(c.x-B.x)<32){c.g=1;got++;CR={on:1,x:B.x,y:B.y,f:B.f,p:0};FLS=t;ding();say('BETH',got<5?['Got one. Take it to Rick!','Ew. Sticky. To Rick!','Three to go — to Rick!','Two more. To Rick!','Last one. To Rick!'][got-1]:"That's all five! Here you go, Dad.");break}
+ if(!CR.on)for(const c of CELLS)if(!c.g&&c.f==B.f&&M.abs(c.x-B.x)<32){c.g=1;got++;CR={on:1,x:B.x,y:B.y,f:B.f,p:0};FLS=t;ding();say('BETH',got<5?['Got one. To Rick!','Ew. Sticky. To Rick!','Three to go — to Rick!','Two more. To Rick!','Last one. To Rick!'][got-1]:"That's all five! Here you go, Dad.");break}
  if(CR.on&&B.f==0&&M.abs(B.x-1500)<60){CR.on=0;okS();if(got==5)setQ([['RICK',"All five! Matrix online. Now find Tommy — and Beth? Do what you gotta do."]],initTr);else say('RICK',["One cell in! Four to go, sweetie!","Two cells! "+bq+"Keep 'em coming!","Three! You're a natural cell-smuggler!","Four! One more and I can hack it!"][got-1])}
  let chase=0;
  for(const o of U){if(t<o.st)continue;
@@ -203,9 +203,9 @@ function bgDecor(t){const d=ph==4;
   X.strokeStyle=d?'#4a4a4a':'#a97b50';X.lineWidth=8;X.beginPath();X.moveTo(tx,ty);X.lineTo(tx,ty-52);X.stroke();
   X.fillStyle=d?'#6a6a6a':['#ff8fa3','#ffd32a','#7bdff2'][i];X.beginPath();X.arc(tx,ty-64,24,0,7);X.fill();
   X.fillStyle='rgba(255,255,255,.35)';X.beginPath();X.arc(tx-8,ty-72,8,0,7);X.fill()}}
-function cam(){const m=chh>cw,dvw=ph==2?420:ph==3?760:ph==6?(m?700:960):ph==0?(m?920:1600):ph==5?(m?1220:1600):m?900:1600;
+function cam(){const m=chh>cw,dvw=ph==2?(m?300:1150):ph==3?760:ph==6?(m?700:960):ph==0?(m?920:1600):ph==5?(m?1220:1600):m?900:1600;
  SS=M.min(cw/dvw,(chh-PNH)*W/(dvw*GH));
- const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:ph==6?800:B.x,fy=ph==2?250:ph==3?430:ph==0?424:ph==5?390:ph==6?(NG.s==1?(NG.t<1.1?540:M.max(330,M.min(540,NG.my))):NG.s>1&&NG.s<5?330:640):B.y-60;
+ const fx=ph==2?1355:ph==3?1085:ph==0?960:ph==5?740:ph==6?800:B.x,fy=ph==2?380:ph==3?430:ph==0?424:ph==5?390:ph==6?(NG.s==1?(NG.t<1.1?540:M.max(330,M.min(540,NG.my))):NG.s>1&&NG.s<5?330:640):B.y-60;
  const vw=cw/SS,vh=(chh-PNH)/SS,cx=M.max(vw/2,M.min(W-vw/2,fx)),cy=vh>=GH?GH/2:M.max(vh/2,M.min(GH-vh/2,fy));
  OX=cw/2-cx*SS;OY=(chh-PNH)/2-cy*SS}
 function drawMenu(t){const gy=chh*.7,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900)));
@@ -232,9 +232,9 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
   const hot=ph==4&&FNG==2;if(ph!=1){X.fillStyle='#555';X.beginPath();X.arc(1330,floorY(4)-60,46,0,7);X.fill();
    if(hot)for(let i=0;i<6;i++){X.strokeStyle=RB[i];X.lineWidth=7;X.beginPath();X.arc(1330,floorY(4)-60,52+i*6,t*2+i,t*2+i+4.4);X.stroke()}
    X.fillStyle=hot?'#fff':'#aaa';X.beginPath();X.arc(1330,floorY(4)-60,30,0,7);X.fill()}}
- if(ph==2||ph==3){X.strokeStyle='#fff';X.lineWidth=3;X.setLineDash([9,7]);X.strokeRect(1255,150,200,220);X.setLineDash([])}
- if(ph==2){X.globalAlpha=.18;X.strokeStyle='#fff';X.lineWidth=2;X.beginPath();X.moveTo(1280,340);for(const p of DK)X.lineTo(p[0],p[1]);X.stroke();X.globalAlpha=1;
-  X.font='600 20px system-ui';X.textAlign='center';X.fillStyle='#ddd';X.fillText('chalk lock — hold & trace the dots',1355,135);
+ if(ph==2||ph==3){X.strokeStyle='#fff';X.lineWidth=3;X.setLineDash([9,7]);X.strokeRect(1248,140,236,512);X.setLineDash([])}
+ if(ph==2){X.globalAlpha=.18;X.strokeStyle='#fff';X.lineWidth=2;X.beginPath();X.moveTo(...DK[0]);for(const p of DK)X.lineTo(p[0],p[1]);X.stroke();X.globalAlpha=1;
+  X.font='600 20px system-ui';X.textAlign='center';X.fillStyle='#ddd';X.fillText('chalk lock — trace the dots',1355,135);
   X.fillStyle='#fff';for(const p of DK){X.beginPath();X.arc(p[0],p[1],5,0,7);X.fill()}
   X.lineCap='round';for(let i=0;i<TRP.length;i++){X.strokeStyle=RB[i%6];X.lineWidth=7;X.beginPath();X.moveTo(...TRP[i?i-1:i]);X.lineTo(...TRP[i]);X.stroke()}}
  if(ph==3){X.font='600 20px system-ui';X.textAlign='center';X.fillStyle='#ddd';X.fillText('memory gate — repeat the order',1085,110);
@@ -304,7 +304,7 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
  if(ph==4){X.fillStyle='rgba(255,60,60,'+(.05+.04*M.sin(t*5))+')';X.fillRect(0,0,cw,GA)}
  if(ph==1&&t-FLS<.3){X.fillStyle='rgba(255,255,255,'+((1-(t-FLS)/.3)*.4)+')';X.fillRect(0,0,cw,GA)}
  X.fillStyle=ph==0||ph==5?'#ddd':(ph==5&&LOT<10?'#ff6b6b':'#111');X.font='800 '+M.round(PNH*.15)+'px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
- X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5'+(CR.on?' — BRING IT TO RICK':''):ph==2?'TRACE THE CHALK DOOR':ph==3?(GOP?'GO! → GATE':'MEMORY GATE'):ph==4?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'EXECUTION IN '+M.max(0,LOT).toFixed(1)+'s',16,M.round(PNH*.19));
+ X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5'+(CR.on?' — BRING IT TO RICK':''):ph==2?'TRACE THE LOCK':ph==3?(GOP?'GO! → GATE':'MEMORY GATE'):ph==4?(FNG==2?'RUN ↑':FNG==1?'TAKE THE FINGER':'DODGE · REACH TOMMY'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'EXECUTION IN '+M.max(0,LOT).toFixed(1)+'s',16,M.round(PNH*.19));
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=2;
  X.beginPath();X.roundRect(8,chh-PNH+8,cw-16,PNH-14,14);X.fill();X.stroke();
  if(DQ.length){X.strokeStyle='#2ed573';X.lineWidth=3.5+M.sin(t*7)*1.5;X.beginPath();X.roundRect(3,chh-PNH+3,cw-6,PNH-4,18);X.stroke()}
