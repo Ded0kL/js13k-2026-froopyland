@@ -306,8 +306,8 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
  X.setTransform(DPR,0,0,DPR,0,0);
  if(ph==4){X.fillStyle='rgba(255,60,60,'+(.05+.04*M.sin(t*5))+')';X.fillRect(0,0,cw,GA)}
  if(ph==1&&t-FLS<.3){X.fillStyle='rgba(255,255,255,'+((1-(t-FLS)/.3)*.4)+')';X.fillRect(0,0,cw,GA)}
- X.fillStyle=ph==0||ph==5?'#ddd':(ph==5&&LOT<10?'#ff6b6b':'#111');X.font='800 '+M.round(PNH*.15)+'px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
- X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5'+(CR.on?' — BRING IT TO RICK':''):ph==2?'TRACE THE LOCK':ph==3?'GATE '+GR+'/5':ph==4?(FNG==2?'RUN ↑←':FNG==1?'TAKE THE FINGER':AIM?'TAP TOMMY — FIRE!':BW.got?'TAP BETH — AIM!':BW.h?BW.h+'/3 — FETCH THE ARROW':'DODGE · GRAB PINK ARROW ↑'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'EXECUTION IN '+M.max(0,LOT).toFixed(1)+'s',16,M.round(PNH*.19));
+ X.fillStyle=ph==0||ph==5?'#ddd':(ph==5&&LOT<10?'#ff6b6b':'#111');X.font='800 '+M.round(PNH*(ph==4?.12:.15))+'px system-ui';X.textAlign='left';X.textBaseline='alphabetic';
+ X.fillText(ph==0?'CABLES '+PZS+'/4':ph==1?'CELLS '+got+'/5'+(CR.on?' — BRING IT TO RICK':''):ph==2?'TRACE THE LOCK':ph==3?'GATE '+GR+'/5':ph==4?(FNG==2?'RUN ↑←':FNG==1?'TAKE THE FINGER':AIM?'TAP TOMMY — FIRE!':BW.got?'TAP BETH — AIM!':BW.h?BW.h+'/3 — GET ARROW':'DODGE · GET ARROW ↑'):ph==6?(NG.s==3?'HP '+NG.hp+' — ZAPPED '+NG.k+'/20':'FROOPYLAND'):'EXECUTION IN '+M.max(0,LOT).toFixed(1)+'s',16,M.round(PNH*.19));
  X.fillStyle='rgba(255,255,255,.95)';X.strokeStyle='#333';X.lineWidth=2;
  X.beginPath();X.roundRect(8,chh-PNH+8,cw-16,PNH-14,14);X.fill();X.stroke();
  if(DQ.length){X.strokeStyle='#2ed573';X.lineWidth=3.5+M.sin(t*7)*1.5;X.beginPath();X.roundRect(3,chh-PNH+3,cw-6,PNH-4,18);X.stroke()}
