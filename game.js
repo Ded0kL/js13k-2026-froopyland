@@ -14,6 +14,7 @@ const B={x:150,y:floorY(0),f:0,q:[]},R={x:1450,f:4};
 const U=[];for(let i=0;i<3;i++)U.push({x:500+i*300,f:i+1,y:floorY(i+1),wx:0,wt:0,nc:0,st:0});
 let ph=0,got=0,win=0,stepT=0,PZS=0,FLS=0,CR={on:0,x:0,y:0,f:0,p:0},DN=[];
 let MENU=1;const startGame=()=>{initA();MENU=0;initL0()};const menuBtn=()=>{const bw=M.min(340,cw*.62),bh=M.max(56,M.min(74,chh*.08));return[cw/2-bw/2,chh*.44-bh/2,bw,bh]};
+const DBG=[['GAR',initL0],['NEST',initL1],['GATE',initGate],['CELLS',initCells],['TRACE',initTr],['TOMMY',initL2],['DNA',initL3]],dbgBtn=i=>[10+i*(cw-20)/DBG.length+3,chh-46,(cw-20)/DBG.length-6,34];
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0,DLT=0;
@@ -35,7 +36,7 @@ function initL0(){ph=0;PZS=0;PZ=[];for(let i=0;i<4;i++){const p=[0,0,0,0,0,0,0];
 function clickSeg(s){const p=PZ[PZS];p[s]^=1;if(s+1<7)p[s+1]^=1;clock();if(pipeOK(PZS)){okS();PZS++;if(PZS>3)setQ([['RICK',"Power's linked! The "+cd+" is open — GO!"]],initL1);else say('RICK',PTXT[PZS])}}
 // L1: 3 memory cells
 const CELLS=[[250,0],[1300,2],[800,3],[400,4],[1150,4]].map(([x,f])=>({x,f,g:0}));
-function initL1(){win=0;ph=6;got=0;NG={s:0,k:0,hp:3,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:floorY(0)};B.x=560;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>{NG.s=1;NG.t=0;neigh()})}
+function initL1(){win=0;ph=6;got=0;NG={s:0,k:0,hp:1,t:0,sp:1,en:[],sh:[],mx:1650,my:140,rx:680,ry:floorY(0)};B.x=560;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0});setQ(CS2,()=>{NG.s=1;NG.t=0;neigh()})}
 function initCells(){win=0;ph=1;got=0;CR={on:0,x:0,y:0,f:0,p:0};B.x=150;B.y=floorY(0);B.f=0;B.q=[];for(const c of CELLS)c.g=0;U.forEach((o,i)=>{o.f=i+1;o.y=floorY(i+1);o.x=500+i*300;o.st=0;o.wt=0})}
 function wuni(x,gy,s,t){const fl=M.sin(t*9+x);X.save();X.translate(x,gy-58*s);X.scale(s,s);for(const d of[-1,1]){X.save();X.scale(d,1);X.rotate(-.2-fl*.4);X.fillStyle='rgba(255,255,255,.9)';X.strokeStyle='#000';X.lineWidth=2.2;X.lineJoin='round';X.beginPath();X.moveTo(0,0);X.quadraticCurveTo(30,-14,54,-4);X.quadraticCurveTo(38,0,42,8);X.quadraticCurveTo(22,8,12,5);X.quadraticCurveTo(5,5,0,0);X.closePath();X.fill();X.stroke();X.restore()}X.restore();uni(x,gy,s,t)}
 function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=4)return;NG.t+=dt;
@@ -44,12 +45,11 @@ function nestUpd(t,dt){if(NG.s!=1&&NG.s!=3&&NG.s!=4)return;NG.t+=dt;
   else if(NG.t<1.35){mx=700;my=730}
   else{const p=M.min(1,(NG.t-1.35)/1.55);mx=700+100*p;my=730-490*p;NG.rx=mx;NG.ry=my+62;if(p>=1){NG.s=2;NG.t=0;NG.mx=1120;NG.my=190;NG.rx=800;NG.ry=222;setQ(GRABQ,()=>{NG.s=4;NG.t=0;NG.en=[];NG.sh=[]});return}NG.mx=mx;NG.my=my;return}}
  if(NG.s==4){NG.mx+=420*dt;NG.my-=240*dt;if(NG.t>2.2){NG.s=3;NG.t=0;NG.en=[];NG.sh=[]}return}
- if(NG.s==3&&NG.k>=10&&!NG.x2){NG.x2=1;NG.en=[];NG.sh=[];NG.t=0;setQ([['RICK',"Wait — "+bq+"— MORE of them?!"],['BETH',"Round two, Dad."],['RICK',"SECOND COURSE! Same drill: zap the "+ht+", protect the nest!"]],()=>{NG.s=3;NG.t=0})}
- if(NG.t>NG.sp&&NG.en.length<5){NG.t=0;NG.sp=M.max(.5,1.2-NG.k%10*.06);NG.en.push({x:M.random()<.5?-70:1670,y:170+M.random()*250})}
- for(const e of NG.en){const dx=800-e.x,dy=182-e.y,d=M.hypot(dx,dy)||1,v=2+NG.k*.13;e.x+=dx/d*v*dt*60;e.y+=dy/d*v*dt*60;
+ if(NG.s==3&&NG.k>=10&&!NG.x2){NG.x2=1;NG.en=[];NG.sh=[];NG.t=0;setQ([['RICK',"Wait — "+bq+"— MORE of them?!"],['BETH',"Round two, Dad."],['RICK',"SECOND COURSE! Same drill: zap the "+ht+", protect the nest!"]],()=>{NG.s=3;NG.t=0})}  if(NG.t>NG.sp&&NG.en.length<5){NG.t=0;NG.sp=M.max(.5,1.2-NG.k%10*.06)*(NG.x2?.72:1);NG.en.push({x:M.random()<.5?-70:1670,y:170+M.random()*250})}
+ for(const e of NG.en){const dx=800-e.x,dy=182-e.y,d=M.hypot(dx,dy)||1,v=(2+NG.k*.13)*(NG.x2?1.35:1);e.x+=dx/d*v*dt*60;e.y+=dy/d*v*dt*60;
   if(d<48){e.g=1;NG.hp--;hurt();if(NG.hp>0)say('RICK',"OW! "+bq+"They're snacking on me! "+zp+"!")}}
  NG.en=NG.en.filter(e=>!e.g);
- if(NG.hp<=0){NG.hp=3;NG.en=[];NG.sp=1.5;say('RICK',"NOT dying in a horse's nest today! "+bq+"FIRE, Beth!")}
+ if(NG.hp<=0){hurt();NG={s:3,k:0,hp:1,t:0,sp:1,en:[],sh:[],x2:0,mx:1650,my:140,rx:680,ry:floorY(0)};say('RICK',"They got me! FROM THE TOP, Beth! "+zp+"!")}
  for(const b of NG.sh){b.x+=b.dx*dt*60;b.y+=b.dy*dt*60;for(const e of NG.en)if(!e.g&&M.abs(b.x-e.x)<30&&M.abs(b.y-(e.y-36))<30){e.g=1;b.d=1;NG.k++;snd(180,.12,'sawtooth',.12,-120);break}}
  NG.sh=NG.sh.filter(b=>!b.d&&b.x>-90&&b.x<1690&&b.y>-90&&b.y<940);
  if(NG.k>=20){NG.s=5;FLS=t;NG.rx=620;NG.ry=floorY(0);ding();setQ(CSW,initGate)}}
@@ -95,16 +95,10 @@ const dnWon=()=>{const Q=[];for(let r=0;r<6;r++)if(DN[r][0]&8)Q.push([r,0]);cons
 function route(px,py){const tf=M.max(0,M.min(4,M.round((780-py)/160)));B.q=[];
  if(tf!=B.f){const l=nl(B.x);B.q.push([l,floorY(B.f)],[l,floorY(tf)])}
  B.q.push([M.max(30,M.min(W-30,px)),floorY(tf)])}
-const K={};
-onkeydown=e=>{initA();const k=e.key.toLowerCase();K[k]=1;if(k.includes('arrow')||k==' ')e.preventDefault();
- if(MENU){if(k=='enter'||k==' '||k=='e')startGame();return}
- if(DQ.length){if((k=='enter'||k==' '||k=='e')&&T()-DLT>.4)nxt();return}
- if(win&&k=='enter')location.reload()};
-onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
 let J=0;
 CV.onpointerdown=e=>{initA();
- if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();return}
+ if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();else{for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);if(mx>dx&&mx<dx+dw&&my>dy&&my<dy+dh){initA();MENU=0;DBG[i][1]();break}}return}}
  const r0=CV.getBoundingClientRect(),sy=e.clientY-r0.top;
  if(DQ.length){if(sy>chh-PNH&&T()-DLT>.4)nxt();return}
  if(win){location.reload();return}
@@ -125,13 +119,12 @@ CV.onpointermove=e=>{if(!e.buttons||DQ.length||win)return;const[mx,my]=ptr(e);
  if(ph!=1&&ph!=3&&ph!=4||ph==4&&AIM)return;route(mx,my)};
 const jend=e=>{if(J&&e.pointerId==J.id)J=0};
 CV.onpointerup=jend;CV.onpointercancel=jend;
-function moveB(t,dt){const vx=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),vy=(K.arrowdown||K.s?1:0)-(K.arrowup||K.w?1:0);
- let ax=vx,ay=vy;
- if(!ax&&!ay&&J){const dx=J.x-B.x;if(M.abs(dx)>26)ax=M.sign(dx);const dy=J.y-40-B.y;if(M.abs(B.x-nl(B.x))<26&&M.abs(dy)>30)ay=M.sign(dy)}
+function moveB(t,dt){let ax=0,ay=0;
+ if(J){const dx=J.x-B.x;if(M.abs(dx)>26)ax=M.sign(dx);const dy=J.y-40-B.y;if(M.abs(B.x-nl(B.x))<26&&M.abs(dy)>30)ay=M.sign(dy)}
  if(ax||ay){B.q=[];B.x=M.max(30,M.min(W-30,B.x+ax*3*dt*60));if(ay&&M.abs(B.x-nl(B.x))<26)B.y=M.max(floorY(4),M.min(floorY(0),B.y+ay*2.6*dt*60));else B.y+=(floorY(B.f)-B.y)*M.min(1,8*dt)}
  else if(B.q[0]){const p=B.q[0],dx=p[0]-B.x,dy=p[1]-B.y;if(M.abs(dx)<8&&M.abs(dy)<8)B.q.shift();else{B.x+=M.sign(dx)*M.min(3*dt*60,M.abs(dx));B.y+=M.sign(dy)*M.min(2.6*dt*60,M.abs(dy))}}
  B.f=M.max(0,M.min(4,M.round((780-B.y)/160)));
- if(vx||vy||B.q[0]&&t>stepT){stepT=t+.22;step()}}
+ if(J||B.q[0]&&t>stepT){stepT=t+.22;step()}}
 let chSaid=0;
 function update(t,dt){if(win||DQ.length)return;
  if(ph==0)return;
@@ -164,7 +157,7 @@ function update(t,dt){if(win||DQ.length)return;
  if(CR.on&&B.f==0&&M.abs(B.x-1500)<60){CR.on=0;okS();if(got==5)setQ([['RICK',"All five! Matrix online. Now find Tommy — and Beth? Do what you gotta do."]],initTr);else say('RICK',["One cell in! Four to go, sweetie!","Two cells! "+bq+"Keep 'em coming!","Three! You're a natural cell-smuggler!","Four! One more and I can hack it!"][got-1])}
  let chase=0;
  for(const o of U){if(t<o.st)continue;
-  if(o.f==B.f&&M.abs(B.x-o.x)<32){if(CR.on){CELLS.push({x:CR.x,f:CR.f,g:0});CR.on=0;got--}B.x=120;B.f=0;B.y=floorY(0);B.q=[];hurt();say('RICK',"They got you?! "+wl);U.forEach(u=>u.st=t+3);return}
+  if(o.f==B.f&&M.abs(B.x-o.x)<32){hurt();initCells();U.forEach(u=>u.st=t+2.5);say('RICK',"They got you?! FROM THE TOP, sweetie!");return}
   let tx,tf;
   if(o.f==B.f&&M.abs(B.x-o.x)<380){tx=B.x;tf=B.f;chase=1;if(t>o.nc){o.nc=t+2.5;neigh()}}
   else{if(t>o.wt){o.wx=120+M.random()*1360;o.wt=t+3+M.random()*3}tx=o.wx;tf=o.f}
@@ -225,14 +218,17 @@ function drawMenu(t){const gy=chh*.7,s=M.min(1.1,M.max(.55,M.min(cw/1150,chh/900
  X.globalAlpha=.22;for(let i=0;i<3;i++){X.strokeStyle=RB[i*2];X.lineWidth=14;X.beginPath();X.arc(cw/2,chh*1.28,cw*.45+i*18,M.PI,0);X.stroke()}X.globalAlpha=1;
  X.textAlign='center';X.fillStyle='#111';
  X.font='900 '+M.round(M.min(84,cw*.11))+'px system-ui';X.fillText('FROOPYLAND',cw/2,chh*.2);
- X.fillStyle=RB[1];X.font='700 '+M.round(M.min(22,cw*.035))+'px system-ui';X.fillText('🦄 UNICORNS & RAINBOWS — js13k 2026',cw/2,chh*.2+M.min(42,cw*.055));
+ {X.font='800 '+M.round(M.min(44,cw*.062))+'px system-ui';const s3='RICK AND BETH',w3=X.measureText(s3).width;let x3=cw/2-w3/2,y3=chh*.2+M.min(58,cw*.075);
+  for(let i=0;i<s3.length;i++){const w2=X.measureText(s3[i]).width;X.save();X.translate(x3+w2/2,y3);X.rotate(M.sin(i*2.7)*.09);X.translate(0,M.sin(i*1.9)*2.5);X.fillStyle=[RB[0],RB[1],RB[4]][i%3];X.fillText(s3[i],0,M.sin(i*.8)*2);X.restore();x3+=w2}
+  X.fillStyle=RB[1];X.font='700 '+M.round(M.min(20,cw*.032))+'px system-ui';X.fillText('🦄 UNICORNS & RAINBOWS — js13k 2026',cw/2,y3+M.min(32,cw*.045))}
  const[bx,by,bw,bh]=menuBtn(),pu=1+M.sin(t*3)*.03;
  X.save();X.translate(cw/2,by+bh/2);X.scale(pu,pu);X.fillStyle='#2ed573';X.strokeStyle='#1a8f4a';X.lineWidth=4;X.beginPath();X.roundRect(-bw/2,-bh/2,bw,bh,16);X.fill();X.stroke();
  X.fillStyle='#fff';X.font='800 '+M.round(bh*.4)+'px system-ui';X.fillText('▶  PLAY',0,bh*.15);X.restore();
  const names=['RICK','BETH','UNICORN','TOMMY'],sp=M.min(170,cw/4.4),x0=cw/2-sp*1.5;
  rick(x0,gy,s*.9,0,t);beth(x0+sp,gy,s*.9,0,t);uni(x0+sp*2,gy,s*.9,t);tommy(x0+sp*3,gy,s*.9,0);
  X.fillStyle='#333';X.font='700 '+M.round(M.max(11,M.min(15,cw*.026)))+'px system-ui';
- for(let i=0;i<4;i++)X.fillText(names[i],x0+i*sp,gy+26)}
+ for(let i=0;i<4;i++)X.fillText(names[i],x0+i*sp,gy+26);
+ X.font='700 12px system-ui';for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);X.fillStyle='#1d2b22';X.strokeStyle='#2ed573';X.lineWidth=2;X.beginPath();X.roundRect(dx,dy,dw,dh,8);X.fill();X.stroke();X.fillStyle='#aaa';X.fillText(DBG[i][0],dx+dw/2,dy+21)}}
 function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);return}if(ph==0||ph==2||ph==3||ph==5){SS=1;OX=0;OY=0}else cam();const GA=chh-PNH,tk=DQ.length>0;
  if(ph==0||ph==5)X.fillStyle='#161616';else{const d=ph==4,g=X.createLinearGradient(0,0,0,GA);g.addColorStop(0,d?'#6a4a5a':'#a5e3ff');g.addColorStop(1,d?'#40303f':'#e6ffd9');X.fillStyle=g}
  X.fillRect(0,0,cw,chh);
