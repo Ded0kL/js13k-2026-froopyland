@@ -99,7 +99,7 @@ onkeyup=e=>K[e.key.toLowerCase()]=0;
 function ptr(e){const r=CV.getBoundingClientRect();return[(e.clientX-r.left-OX)/SS,(e.clientY-r.top-OY)/SS]}
 let J=0;
 CV.onpointerdown=e=>{initA();
- if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();else for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);if(mx>dx&&mx<dx+dw&&my>dy&&my<dy+dh){initA();MENU=0;DBG[i][1]()}return}}
+ if(MENU){const[mx,my]=ptr(e),[bx,by,bw,bh]=menuBtn();if(mx>bx&&mx<bx+bw&&my>by&&my<by+bh)startGame();else{for(let i=0;i<DBG.length;i++){const[dx,dy,dw,dh]=dbgBtn(i);if(mx>dx&&mx<dx+dw&&my>dy&&my<dy+dh){initA();MENU=0;DBG[i][1]();break}}return}}
  const r0=CV.getBoundingClientRect(),sy=e.clientY-r0.top;
  if(DQ.length){if(sy>chh-PNH&&T()-DLT>.4)nxt();return}
  if(win){location.reload();return}
