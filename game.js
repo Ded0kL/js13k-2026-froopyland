@@ -157,6 +157,7 @@ function update(t,dt){if(win||DQ.length)return;
    if(kn.dy>0&&kn.y>=floorY(fB)){kn.y=floorY(fB);kn.s=1}
    if(M.abs(kn.x-B.x)<24&&M.abs(kn.y-(B.y-30))<42){caught2(t);return}}
   return}
+ if(ph==5)return;
  // ph 1
  if(!CR.on)for(const c of CELLS)if(!c.g&&c.f==B.f&&M.abs(c.x-B.x)<32){c.g=1;got++;CR={on:1,x:B.x,y:B.y,f:B.f,p:0};FLS=t;ding();say('BETH',got<5?['Got one. To Rick!','Ew. Sticky. To Rick!','Three to go — to Rick!','Two more. To Rick!','Last one. To Rick!'][got-1]:"That's all five! Here you go, Dad.");break}
  if(CR.on&&B.f==0&&M.abs(B.x-1500)<60){CR.on=0;okS();if(got==5)setQ([['RICK',"All five! Matrix online. Now find Tommy — and Beth? Do what you gotta do."]],initTr);else say('RICK',["One cell in! Four to go, sweetie!","Two cells! "+bq+"Keep 'em coming!","Three! You're a natural cell-smuggler!","Four! One more and I can hack it!"][got-1])}

@@ -49,4 +49,6 @@
   - **final zip: 13,277 / 13,312 bytes (35 B spare)** — `js13k-froopyland.zip`
 - [x] Category research for the submit form (Desktop+Mobile+Audio already satisfied; Wavedash = publish until Sep 20; Online = optional multiplayer via their WS relay; WebXR = separate VR game)
 - [ ] Submit on js13kgames.com/2026 (deadline Sep 13, 13:00 CEST)
+- [x] **Trailer**: cut 13–26s + two stray menu flashes (40–42.1s, 48.6–51.2s) → 45.3s; soundtrack = the game's own simplified theme rendered via `_theme_game_render.js` (exact `musN` square-wave replica, BPM 82.4, 4 loops) → `froopyland-trailer-final.mp4`
+- [x] **BUGFIX (critical)**: in full playthroughs the DNA level (ph=5) could throw the player back to CELLS — the froupie chase/catch code ran during DNA because ph5 fell through the `update()` phase guards (only hit in real runs; debug DNA jump reset froupies differently). Fix: one-line guard `if(ph==5)return;` (+15 B minified; zip now **13,282 / 13,312 B**). Regression sims: `sim_dna.js`, `sim_cells.js` (pickup + froupie-catch still work)
 - [ ] Optional: publish on Wavedash before Sep 20 ($10 credit for every valid entry)
