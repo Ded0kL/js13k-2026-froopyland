@@ -18,8 +18,13 @@ const DBG=[['GAR',initL0],['NEST',initL1],['GATE',initGate],['CELLS',initCells],
 let TR=0,TRC=0;
 const dlg={w:'RICK',s:''};const say=(w,s)=>{dlg.w=w;dlg.s=s};
 let DQ=[],ST=0,after=0,DLT=0;
-const setQ=(qs,cb)=>{DLT=T();DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1])};
-const nxt=()=>{DLT=T();ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;if(after){const f=after;after=0;f()}}};
+const setQ=(qs,cb)=>{DLT=T();DQ=qs.map(x=>x.slice());ST=0;after=cb||0;if(DQ[0])say(DQ[0][0],DQ[0][1]);if(AC)MUS.on=1};
+const nxt=()=>{DLT=T();ST++;if(DQ[ST])say(DQ[ST][0],DQ[ST][1]);else{DQ=[];ST=0;MUS.on=0;if(after){const f=after;after=0;f()}}};
+// --- музика: тема Rick and Morty (спрощена), грає тільки під час діалогів ---
+const MUS={on:0,t0:0,nt:0,i:0};
+const MU=[65,0,70,2,73,4,72,6,75,8,0,11,66,12,65,14,68,16,70,20,73,23,72,26,65,34,70,38,72,40,75,42,80,44,78,46,77,48,70,51,73,54,75,57,72,59,75,61,80,63,78,65,77,67];
+const musN=(m,t,d)=>{const f=440*M.pow(2,(m-69)/12),o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime+t;o.type='square';o.frequency.setValueAtTime(f,n);g.gain.setValueAtTime(0,n);g.gain.linearRampToValueAtTime(.055,n+.02);g.gain.setValueAtTime(.055,n+M.max(.02,d-.06));g.gain.linearRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+d+.02)};
+const musTick=t=>{if(!AC||!MUS.on)return;if(MUS.t0&&t-MUS.t0>29){MUS.t0=t;MUS.i=0}if(!MUS.t0)MUS.t0=t;const U=60/82.4/4;while(MUS.i<MU.length){const m=MU[MUS.i],c=MU[MUS.i+1],st=MUS.t0+c*U;if(st>t+.12)break;if(st>t-.1)musN(m,st-t,U*1.9);MUS.i+=2}};
 const M=Math,bq="*burp* ",wu="Wubba lubba dub dub!",fl="flip it AND its neighbour",cd="chalk door",so="say sorry",wl="Walk it off. WALK IT OFF.",ht="hatchlings",zp="zap them";
 const CS1=[['BETH',"Dad! They're executing Tommy's father today! We go back to Froopyland and stop it!"],['RICK',bq+"Alright. But to reach him we grind through SEVEN trials — one per rainbow color. THIS whole place runs on rainbows, Beth!"],['RICK',"I drew the "+cd+" on the wall, but the quantum projector is completely fried!"],['RICK',"Some carbon lifeform compressed my system into a 13KB hackathon build! There's no memory left for auto-booting!"]];
 const CS2=[['RICK',"W-welcome to Froopyland, sweetie! "+bq+"Built every leaf when you were nine! Child-proofed to hell — NOTHING here can go wrong!"],['BETH',"You built me a murder jungle, Dad."],['RICK',"A SAFE murder jungle! Relax and — hold on. Is that pony wearing WINGS? I did not install wings."]];
@@ -328,4 +333,4 @@ function draw(t){resize();X.setTransform(DPR,0,0,DPR,0,0);if(MENU){drawMenu(t);r
  if(DQ.length){X.fillStyle='#2a9d5c';X.font='800 '+M.round(PNH*.15)+'px system-ui';X.textAlign='right';X.fillText('tap ▸',cw-20,chh-14)}
 
  if(win){X.fillStyle='rgba(255,255,255,.78)';X.fillRect(0,0,cw,chh);X.fillStyle='#111';X.font='900 '+M.round(M.min(84,cw*.08))+'px system-ui';X.textAlign='center';X.fillText('TOMMY LIVES. YOU MONSTER.',cw/2,chh/2);X.font='700 '+M.round(M.min(24,cw*.038))+'px system-ui';X.fillText('Froopyland saved. Rainbows restored. *burp* WUBBA LUBBA DUB DUB!',cw/2,chh/2+52);X.font='600 '+M.round(M.min(30,cw*.045))+'px system-ui';X.fillText('tap — once more',cw/2,chh/2+100)}}
-let lt=T();(function L(){const t=T(),dt=M.min(t-lt,.05);lt=t;update(t,dt);draw(t);requestAnimationFrame(L)})();
+let lt=T();(function L(){const t=T(),dt=M.min(t-lt,.05);lt=t;update(t,dt);draw(t);musTick(t);requestAnimationFrame(L)})();
